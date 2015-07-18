@@ -75,3 +75,46 @@ bandit8
 The password for the next level is stored in the file data.txt and is the only line of text that occurs only once.
 
     sort data.txt | uniq -u
+
+bandit9
+-------
+The password for the next level is stored in the file data.txt in one of the few human-readable strings, beginning with several ‘=’ characters.
+
+    strings data.txt | grep ===
+
+bandit10
+--------
+The password for the next level is stored in the file data.txt, which contains base64 encoded data.
+
+    base64 -d data.txt
+
+bandit11
+--------
+The password for the next level is stored in the file data.txt, where all lowercase (a-z) and uppercase (A-Z) letters have been rotated by 13 positions.
+
+    tr 'A-Za-z' 'N-ZA-Mn-za-m' < data.txt
+
+bandit12
+--------
+The password for the next level is stored in the file data.txt, which is a hexdump of a file that has been repeatedly compressed.
+
+    cd $(mktemp -d)
+    cp ~/data.txt .
+    xxd -r data.txt data1.bin
+    file data1.bin
+    gunzip < data1.bin > data2.bin
+    file data2.bin
+    bunzip2 < data2.bin > data3.bin
+    file data3.bin
+    gunzip < data3.bin > data4.bin
+    file data3.bin
+    tar -xf data4.bin
+    file data5.bin
+    tar -xf data5.bin
+    file data6.bin
+    bunzip2 < data6.bin > data7.bin
+    file data7.bin
+    tar -xf data7.bin
+    file data8.bin
+    gunzip < data8.bin > data9.bin
+    cat data9.bin
