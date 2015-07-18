@@ -1,0 +1,24 @@
+set imap_user = "mdesroch@hotmail.com"
+set imap_pass = ""
+
+set smtp_url = "smtp://mdesroch@hotmail.com@smtp.live.com:587/"
+set smtp_pass = ""
+
+set ssl_force_tls = yes
+set imap_keepalive = 60
+
+set from = "mdesroch@hotmail.com"
+set realname = "Mathieu Desrochers"
+
+set folder = "imaps://imap-mail.outlook.com:993"
+set spoolfile = "+INBOX"
+set postponed = "+[Hotmail]/Drafts"
+
+set header_cache = ~/.mutt/cache/headers
+set message_cachedir = ~/.mutt/cache/bodies
+set certificate_file = ~/.mutt/certificates
+
+set editor = vim
+
+set sort = reverse-date-received
+set move = no
