@@ -1,6 +1,17 @@
 Installing slackware 14.1 on my laptop
 ======================================
 
+Selecting the packages to install
+---------------------------------
+Select the following series:
+
+- A - Base Linux System
+- AP - Various Applications that do not need X
+- D - Program Development (C, C++, Lisp, Perl, etc.)
+- F - FAQ lists,  HOWTO documentation
+- L - System Libraries (Needed by KDE, GNOME, X, and more)
+- N - Networking (TCP/IP, UUCP, Mail, News)
+
 Booting strait to slackware
 ---------------------------
 Run the following commands:
