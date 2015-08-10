@@ -11,6 +11,7 @@ Select the following series:
 - F - FAQ lists,  HOWTO documentation
 - L - System Libraries (Needed by KDE, GNOME, X, and more)
 - N - Networking (TCP/IP, UUCP, Mail, News)
+- TCL - Tlc/Tk script languages
 
 Booting strait to slackware
 ---------------------------
