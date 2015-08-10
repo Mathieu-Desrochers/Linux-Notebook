@@ -3,21 +3,37 @@ Installing slackware 14.1 on my laptop
 
 Selecting the packages to install
 ---------------------------------
-Select the following series:
+Select the following packages:
 
-- A - Base Linux System
-- AP - Various Applications that do not need X
-- D - Program Development (C, C++, Lisp, Perl, etc.)
-- F - FAQ lists,  HOWTO documentation
-- L - System Libraries (Needed by KDE, GNOME, X, and more)
-- N - Networking (TCP/IP, UUCP, Mail, News)
-- TCL - Tlc/Tk script languages
+    A  - Base Linux System
+         Everything
+
+    AP - Various Applications that do not need X
+         groff
+         man
+         man-pages
+
+    F -  FAQ lists,  HOWTO documentation
+         Everything
+
+    L -  System Libraries (Needed by KDE, GNOME, X, and more)
+         libnl3
+         urwid
+
+    N -  Networking (TCP/IP, UUCP, Mail, News)
+         dhcpcd
+         iputils
+         libnl3
+         network-scripts
+         net-toolsdf 
+         wireless-tools
+         wpa-supplicant
 
 Booting strait to slackware
 ---------------------------
 Run the following commands:
 
-    # vim /etc/lilo.conf
+    # vi /etc/lilo.conf
 
 Perform the following edits:
 
@@ -29,11 +45,11 @@ Run the following commands:
 
     # lilo
 
-Making the DVD drive mountable
-------------------------------
+Enabling the DVD drive
+----------------------
 Run the following commands:
 
-    # vim /etc/fstab
+    # vi /etc/fstab
 
 Perform the following edits:
 
@@ -48,31 +64,13 @@ Enabling wireless networking
 ----------------------------
 Run the following commands:
 
-    # vim /etc/rc.d/rc.inet1.conf
-
-Edit the following lines:
-
-    IPADDR[0]=""
-    NETMASK[0]=""
-    USE_DHCP[0]=""
-    DHCP_HOSTNAME[0]=""
-    GATEWAY=""
-
-Run the following commands:
-
     # installpkg /mnt/cdrom/extra/wicd/wicd-1.7.2.4-x86_64-4.txz
-    # chmod +x /etc/rc.d/rc.wicd
 
-Run the following commands:
+Run the following commands to disable automatic networking:
 
-    # vim /etc/rc.d/rc.local
-
-Add the following lines:
-
-    if [ -x /etc/rc.d/rc.wid ]; then
-      /etc/rc.d/rc.wid start
-    fi
+    # chmod -x /etc/rc.d/rc.wicd
 
 Then run the following commands to connect to a network:
 
+    # wicd
     # wicd-curses
