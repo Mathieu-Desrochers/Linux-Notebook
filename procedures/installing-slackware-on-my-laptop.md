@@ -17,20 +17,24 @@ Select the following packages:
          Everything
 
     L -  System Libraries (Needed by KDE, GNOME, X, and more)
+         dbus-glib
+         dbus-python
+         glib2
+         libffi
          libnl3
+         pygobject
          urwid
 
     N -  Networking (TCP/IP, UUCP, Mail, News)
          dhcpcd
          iputils
-         libnl3
-         network-scripts
          net-toolsdf 
+         network-scripts
          wireless-tools
          wpa-supplicant
 
-Booting strait to slackware
----------------------------
+Booting straight to slackware
+-----------------------------
 Run the following commands:
 
     # vi /etc/lilo.conf
@@ -62,6 +66,18 @@ Then run the following commands to mount the DVD drive:
 
 Enabling wireless networking
 ----------------------------
+Run the following commands:
+
+    # vi /etc/rc.d/rc.inet1.conf
+
+Perform the following edits:
+
+    IPADDR[0]=""
+    NETMASK[0]=""
+    USE_DHCP[0]=""
+    DHCP_HOSTNAME[0]=""
+    GATEWAY[0]=""
+
 Run the following commands:
 
     # installpkg /mnt/cdrom/extra/wicd/wicd-1.7.2.4-x86_64-4.txz
