@@ -28,13 +28,13 @@ Select the following packages:
     N -  Networking (TCP/IP, UUCP, Mail, News)
          dhcpcd
          iputils
-         net-toolsdf 
+         net-toolsdf
          network-scripts
          wireless-tools
          wpa-supplicant
 
-Configuring the boot loader
----------------------------
+Booting straight to slackware
+-----------------------------
 Run the following commands:
 
     # vi /etc/lilo.conf
@@ -65,7 +65,7 @@ Perform the following edits:
 
 - Uncomment the line starting with /dev/cdrom
 
-Then run the following commands to mount the DVD drive:
+Then run the following commands to mount a DVD:
 
     # mount /dev/cdrom
     # cd /mnt/cdrom
@@ -94,6 +94,7 @@ Run the following commands to disable automatic networking:
 
 Then run the following commands to connect to a network:
 
+    # su root
     # wicd
     # wicd-curses
 
