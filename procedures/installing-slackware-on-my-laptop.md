@@ -33,8 +33,8 @@ Select the following packages:
          wireless-tools
          wpa-supplicant
 
-Booting straight to slackware
------------------------------
+Configuring the boot loader
+---------------------------
 Run the following commands:
 
     # vi /etc/lilo.conf
@@ -43,7 +43,13 @@ Perform the following edits:
 
 - Comment the section named Boot BMP Image
 - Uncomment the section named Standard menu
-- Comment the line containing prompt
+
+Perform the following edits:
+
+    append="logo.nologo vt.default_uft8=1"
+    compact
+    # prompt
+    vga=791
 
 Run the following commands:
 
@@ -90,3 +96,22 @@ Then run the following commands to connect to a network:
 
     # wicd
     # wicd-curses
+
+Displaying UTF-8 characters
+---------------------------
+Run the following commands:
+
+    # vi /etc/profile.d/lang.sh
+
+Perform the following edits:
+
+    # export LANG=en_US
+    export LANG=en_US.UTF-8
+
+Run the following commands:
+
+    # installpkg /mnt/cdrom/slackware64/ap/terminus-font-4.38-noarch-1.txz
+
+Run the following commands:
+
+    # echo "setfont ter-v18n" > ~/.bash_profile
