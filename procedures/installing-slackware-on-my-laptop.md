@@ -9,6 +9,7 @@ Select the following packages:
          Everything
 
     AP - Various Applications that do not need X
+         ghostscript
          groff
          man
          man-pages
@@ -97,6 +98,32 @@ Then run the following commands to connect to a network:
     # su root
     # wicd
     # wicd-curses
+
+Enabling printing
+-----------------
+Get information about the printer:
+
+- Browse to www.openprinting.org
+- Find the printer model in the database
+- Download and install the recommended driver if applicable
+- Download the printer PPD file if applicable
+
+Alternatively:
+
+- Browse to the manufacturer web site
+- Download and install the printer driver
+
+Run the following commands to launch the printing daemon:
+
+    su root
+    cupsd
+
+Perform the following actions:
+
+- Browse to localhost:631
+- Click on Administration / Add printer
+- Select the printer
+- ...
 
 Displaying UTF-8 characters
 ---------------------------
