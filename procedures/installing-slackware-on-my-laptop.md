@@ -68,7 +68,10 @@ Perform the following edits:
 
 Then run the following commands to mount a DVD:
 
+    # su root
     # mount /dev/cdrom
+    # exit
+
     # cd /mnt/cdrom
 
 Enabling wireless networking
@@ -98,9 +101,10 @@ Then run the following commands to connect to a network:
     # su root
     # wicd
     # wicd-curses
+    # exit
 
-Enabling printing
------------------
+Connecting a printer
+--------------------
 Get information about the printer:
 
 - Browse to www.openprinting.org
@@ -115,15 +119,27 @@ Alternatively:
 
 Run the following commands to launch the printing daemon:
 
-    su root
-    cupsd
+    # cupsd
 
 Perform the following actions:
 
 - Browse to localhost:631
-- Click on Administration / Add printer
-- Select the printer
-- ...
+- Click on Administration / Add printer and select the printer
+- Give the printer a friendly name, let's say Samsung
+- Select the printer model if applicable
+- Select the PPD file if applicable
+
+Run the following commands to set the deault printer:
+
+    # lpadmin -d Samsung
+
+Then run the following commands to print a document:
+
+    # su root
+    # cupsd
+    # exit
+
+    # lp document.txt
 
 Displaying UTF-8 characters
 ---------------------------
