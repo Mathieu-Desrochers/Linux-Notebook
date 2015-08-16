@@ -9,9 +9,11 @@ set fileencoding=utf-8
 syntax enable
 
 set list
-set listchars=tab:▸\ ,trail:·
+set listchars=tab:→\ ,trail:·
 
 set hlsearch
 nnoremap <CR> :noh<CR><CR>
 
 set tags=./tags;
+
+set nobackup
