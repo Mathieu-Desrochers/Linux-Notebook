@@ -1,3 +1,5 @@
 [user]
 	email = mathieu@desrochers
 	name = Mathieu Desrochers
+[core]
+	pager = less -FXRS
