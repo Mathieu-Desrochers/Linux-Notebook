@@ -9,6 +9,7 @@ Select the following packages:
          Everything
 
     AP - Various Applications that do not need X
+         alsa-utils
          ghostscript
          groff
          man
@@ -18,6 +19,8 @@ Select the following packages:
          Everything
 
     L -  System Libraries (Needed by KDE, GNOME, X, and more)
+         alsa-lib
+         alsa-oss
          dbus-glib
          dbus-python
          glib2
@@ -56,7 +59,7 @@ Run the following commands:
 
     # lilo
 
-Enabling the DVD drive
+Mounting the DVD drive
 ----------------------
 Run the following commands:
 
@@ -74,8 +77,8 @@ Then run the following commands to mount a DVD:
 
     # cd /mnt/cdrom
 
-Enabling wireless networking
-----------------------------
+Connecting to a network
+-----------------------
 Run the following commands:
 
     # vi /etc/rc.d/rc.inet1.conf
@@ -103,6 +106,25 @@ Then run the following commands to connect to a network:
     # wicd-curses
     # exit
 
+Displaying UTF-8 characters
+---------------------------
+Run the following commands:
+
+    # vi /etc/profile.d/lang.sh
+
+Perform the following edits:
+
+    # export LANG=en_US
+    export LANG=en_US.UTF-8
+
+Run the following commands:
+
+    # installpkg /mnt/cdrom/slackware64/ap/terminus-font-4.38-noarch-1.txz
+
+Run the following commands:
+
+    # echo "setfont ter-v18n" >> ~/.bash_profile
+
 Connecting a printer
 --------------------
 Get information about the printer:
@@ -124,7 +146,7 @@ Run the following commands to launch the printing daemon:
 Perform the following actions:
 
 - Browse to localhost:631
-- Click on Administration / Add printer and select the printer
+- Click on Administration / Add printer then select the printer
 - Give the printer a friendly name, let's say Samsung
 - Select the printer model if applicable
 - Select the PPD file if applicable
@@ -141,21 +163,29 @@ Then run the following commands to print a document:
 
     # lp document.txt
 
-Displaying UTF-8 characters
----------------------------
+Making noises
+-------------
 Run the following commands:
 
-    # vi /etc/profile.d/lang.sh
+    # su root
+    # alsactl init
+    # alsamixer
 
-Perform the following edits:
+Perform the following actions:
 
-    # export LANG=en_US
-    export LANG=en_US.UTF-8
+- Adjust the default volume levels
+- Beware that the value MM indicates a muted channel
+- Type the m key to toggle muting
 
 Run the following commands:
 
-    # installpkg /mnt/cdrom/slackware64/ap/terminus-font-4.38-noarch-1.txz
+    # alsactl store
+    # exit
 
-Run the following commands:
+Then run the following commands to play music:
 
-    # echo "setfont ter-v18n" > ~/.bash_profile
+    # aplay music.wav
+
+And optionally run the following commands to adjust volume:
+
+    # alsamixer
