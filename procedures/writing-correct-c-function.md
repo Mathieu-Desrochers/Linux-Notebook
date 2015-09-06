@@ -102,7 +102,7 @@ Use the following guidelines:
 - Except if specific values are required to enter certain branches
 - Place a failing check after every existing check
 - Recompile and feed in to valgrind
-- Comfirm no memory was leaked
+- Confirm no memory was leaked
 
 Example:
 
