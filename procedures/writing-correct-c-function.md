@@ -111,3 +111,50 @@ Example:
       sqlite3_open_result, filename);
 
     check_mem(NULL);
+
+Generalized pattern
+-------------------
+The following boilerplate code does the following:
+
+- Respects the above guidelines
+- Removes duplicated code for freeing resources
+
+Example:
+
+    int module_do_stuff(void **a, void **b)
+    {
+        void *a_return = NULL;
+        void *b_return = NULL;
+
+        int exit_code = 0;
+
+        void *a_local = NULL;
+        void *b_local = NULL;
+
+        check(a != NULL, "a: NULL");
+        check(b != NULL, "b: NULL");
+
+        // body with everything under check()
+        // malloc is only allowed from here on
+        // assiging to the return parameters
+        // is still forbidden though
+
+        *a = a_return;
+        *b = b_return;
+
+        goto cleanup;
+
+    error:
+
+        if (a_return != NULL) { free(a_return); }
+        if (b_return != NULL) { free(b_return); }
+
+        exit_code = -1;
+
+    cleanup:
+
+        if (a_local != NULL) { free(a_local); }
+        if (b_local != NULL) { free(b_local); }
+
+        return exit_code;
+    }
