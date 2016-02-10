@@ -5,16 +5,16 @@ Run the following command to locate its device name.
 
     $ df -h
     ...
-    /dev/sdx0       1.3G  831M  362M  70% /media/xxx
+    /dev/sdX0       1.3G  831M  362M  70% /media/xxx
     ...
 
-Get the one mounted under media, where x is a letter and 0 a number.  
+Get the one mounted under media, where X is a letter and 0 is a number.  
 Double check the device size just to make sure.
 
 Run the following commands.
 
-    $ umount /dev/sdx0
-    $ sudo dd bs=4M if=2015-11-21-raspbian-jessie-lite.img of=/dev/sdx
+    $ umount /dev/sdX0
+    $ sudo dd bs=4M if=2015-11-21-raspbian-jessie-lite.img of=/dev/sdX
     $ sync
 
 Insert the card into the pi and connect its network cable.  
@@ -29,7 +29,7 @@ Still connected to your computer, run the following command.
     3: wlan0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc mq state UP group default qlen 1000
     ...
 
-Locate the name of your connected network interface.  
+Get the name of your connected network interface.  
 Run the following command.
 
     $ sudo arp-scan --interface=wlan0 --localnet
@@ -38,7 +38,7 @@ Run the following command.
     ...
 
 Get the IP address on the line showing b8:27.  
-This is the pi's address on your network.
+This is the pi's current address on your network.
 
 Connecting to the pi
 --------------------
@@ -90,13 +90,53 @@ Run the following commands.
     $ sudo ufw allow ssh
     $ sudo ufw enable
 
-Banning unauthorized access
----------------------------
+Rejected connections will be logged in the following file.
+
+    /var/log/ufw.log
+
+Banning failed SSH logins
+-------------------------
 Run the following command.
 
     $ sudo apt-get install fail2ban
-    $ sudo cp /etc/fail2ban/fail2ban.conf /etc/fail2ban/fail2ban.local
+    $ sudo cp /etc/fail2ban/jail.conf /etc/fail2ban/jail.local
 
 Edit the following file.
 
-    /etc/fail2ban/fail2ban.local
+    /etc/fail2ban/jail.local
+
+Replace its content with the following lines.
+
+    [DEFAULT]
+    banaction = ufw
+    bantime  = 600
+    findtime = 600
+
+    [ssh]
+    enabled  = true
+    port     = ssh
+    filter   = sshd
+    logpath  = /var/log/auth.log
+    maxretry = 6
+
+Edit the following file.
+
+    /etc/fail2ban/action.d/ufw.conf
+
+Replace its content with the following lines.
+
+    [Definition]
+    actionstart =
+    actionstop =
+    actioncheck =
+    actionban = ufw insert 1 deny from <ip> to any
+    actionunban = ufw delete deny from <ip> to any
+
+Run the following command.
+
+    $ sudo fail2ban-client reload
+
+Banned addresses can be listed using one of the following commands.
+
+    $ sudo fail2ban-client status ssh
+    $ sudo ufw status
