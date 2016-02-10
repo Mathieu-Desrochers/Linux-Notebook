@@ -72,3 +72,31 @@ Run the following commands.
 
     $ sudo hostnamectl set-hostname tombstone
     $ dpkg-reconfigure tzdata
+
+Setting up a firewall
+---------------------
+Run the following command to install the firewall.
+
+    $ sudo apt-get install ufw
+
+Edit the following file and set IPV6=no.
+
+    /etc/default/ufw
+
+Run the following commands.
+
+    $ sudo ufw default allow outgoing
+    $ sudo ufw default deny incoming
+    $ sudo ufw allow ssh
+    $ sudo ufw enable
+
+Banning unauthorized access
+---------------------------
+Run the following command.
+
+    $ sudo apt-get install fail2ban
+    $ sudo cp /etc/fail2ban/fail2ban.conf /etc/fail2ban/fail2ban.local
+
+Edit the following file.
+
+    /etc/fail2ban/fail2ban.local
