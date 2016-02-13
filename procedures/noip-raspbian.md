@@ -48,3 +48,20 @@ Run the following commands.
 
     sudo chmod 755 /etc/init.d/noip
     sudo update-rc.d noip defaults
+
+Configuring the firewall
+------------------------
+Create the following file.
+
+    /etc/ufw/applications.d/noip
+
+With the following content.
+
+    [NoIP]
+    title=NoIP
+    description=No-IP Dynamic DNS Update Client
+    ports=8245/tcp
+
+Run the following command.
+
+    sudo ufw allow noip
