@@ -1,5 +1,5 @@
-Imaging the SD card
--------------------
+Imaging the micro SD card
+-------------------------
 Connect the card to your computer.  
 Run the following command to locate its device name.
 
@@ -87,7 +87,7 @@ Run the following commands.
 
     $ sudo ufw default allow outgoing
     $ sudo ufw default deny incoming
-    $ sudo ufw allow ssh
+    $ sudo ufw allow OpenSSH
     $ sudo ufw enable
 
 Rejected connections will be logged in the following file.
