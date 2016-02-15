@@ -211,3 +211,38 @@ Run the following commands.
 
     sudo chmod 755 /etc/init.d/noip
     sudo update-rc.d noip defaults
+
+Generating a self-signed SSL certificate
+----------------------------------------
+Run the following command.
+
+    $ sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048
+        -keyout /etc/ssl/private/mail.key
+        -out /etc/ssl/certs/mailcert.pem
+
+    $ sudo chmod 600 /etc/ssl/private/mail.key
+
+Installing a MTA
+----------------
+Login to noip.com and edit the DNS records for your domain.  
+Ensure there is a MX record pointing to your A record.  
+This can be confirmed with the following command.
+
+    $ dig MX your-domain.com +short @ns1.no-ip.com
+    5 mail.your-domain.com.
+
+Add a mail CNAME record targeting your domain.  
+This can be confirmed with the following command.
+
+    $ host mail.your-comain.com ns1.no-ip.com
+    Using domain server:
+    Name: ns1.no-ip.com
+    Address: 204.16.255.55#53
+    Aliases:
+
+    mail.your-domain.com is an alias for your-domain.com.
+
+Run the following commands.
+
+    $ sudo apt-get install postfix
+    $ sudo postfix stop
