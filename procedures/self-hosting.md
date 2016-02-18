@@ -222,7 +222,7 @@ Run the following command.
 
     $ sudo chmod 600 /etc/ssl/private/mail.key
 
-Installing a MTA
+Setting up a MTA
 ----------------
 Login to noip.com and edit the DNS records for your domain.  
 Ensure there is a MX record pointing to your A record.  
@@ -234,15 +234,48 @@ This can be confirmed with the following command.
 Add a mail CNAME record targeting your domain.  
 This can be confirmed with the following command.
 
-    $ host mail.your-comain.com ns1.no-ip.com
+    $ host mail.your-domain.com ns1.no-ip.com
     Using domain server:
     Name: ns1.no-ip.com
     Address: 204.16.255.55#53
     Aliases:
 
     mail.your-domain.com is an alias for your-domain.com.
+    your-domain.com has address 111.222.333.444
+    your-domain.com mail is handled by 5 mail.your-domain.com.
 
 Run the following commands.
 
     $ sudo apt-get install postfix
     $ sudo postfix stop
+
+Edit the following file.
+
+    /etc/postfix/main.cf
+
+Replace its content with the following lines.
+
+    myhostname = mail.your-domain.com
+    mydomain = your-domain.com
+    myorigin = $mydomain
+    mydestination = $myhostname localhost.$mydomain localhost $mydomain
+    mynetworks_style = host
+    relay_domains =
+
+Your ISP may be forcing you to use its SMTP relay.  
+Append the following line to do so.
+
+    relayhost = relay.your-provider.com
+
+Confirm you can send mail by running the following commands.
+
+    $ sudo postfix start
+    $ sendmail you@hotmail.com
+    Subject: Test
+
+    This is a test sent from my own MTA.
+    .
+
+Consult the following files to diagnose any issue.
+
+    /var/log/mail.*
