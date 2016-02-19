@@ -262,20 +262,36 @@ Replace its content with the following lines.
     mynetworks_style = host
     relay_domains =
 
+    smtpd_helo_restrictions = reject_unknown_helo_hostname
+    smtpd_sender_restrictions = reject_unknown_sender_domain
+    smtpd_relay_restrictions = reject_unauth_destination
+    smtpd_recipient_restrictions = reject_unauth_destination
+    smtpd_data_restrictions = reject_unauth_pipelining
+
 Your ISP may be forcing you to use its SMTP relay.  
 Append the following line to do so.
 
-    relayhost = relay.your-provider.com
+    relayhost = some-relay.your-provider.com
 
-Confirm you can send mail by running the following commands.
+Run the following commands.
 
+    $ sudo ufw allow 'Postfix'
+    $ sudo ufw allow 'Postfix SMTPS'
+    $ sudo ufw allow 'Postfix Submission'
+
+Edit the following file.
+
+    /etc/fail2ban/jail.local
+
+Append the following lines.
+
+    [postfix]
+    enabled  = true
+    port     = smtp,ssmtp,submission
+    filter   = postfix
+    logpath  = /var/log/mail.log
+
+Run the following command.
+
+    $ sudo fail2ban-client reload
     $ sudo postfix start
-    $ sendmail you@hotmail.com
-    Subject: Test
-
-    This is a test sent from my own MTA.
-    .
-
-Consult the following files to diagnose any issue.
-
-    /var/log/mail.*
