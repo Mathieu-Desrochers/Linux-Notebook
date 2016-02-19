@@ -114,9 +114,9 @@ Edit the following file.
 Replace its content with the following lines.
 
     [DEFAULT]
-    banaction = ufw
-    bantime  = 600
-    findtime = 600
+    bantime  = 600  ; 10 minutes
+    findtime = 600  ; 10 minutes
+    maxretry = 3
 
     [ssh]
     enabled  = true
@@ -125,18 +125,13 @@ Replace its content with the following lines.
     logpath  = /var/log/auth.log
     maxretry = 6
 
-Edit the following file.
-
-    /etc/fail2ban/action.d/ufw.conf
-
-Replace its content with the following lines.
-
-    [Definition]
-    actionstart =
-    actionstop =
-    actioncheck =
-    actionban = ufw insert 1 deny from <ip> to any
-    actionunban = ufw delete deny from <ip> to any
+    [recidive]
+    enabled  = true
+    filter   = recidive
+    logpath  = /var/log/fail2ban.log
+    action   = iptables-allports[name=recidive]
+    bantime  = 604800  ; 1 week
+    findtime = 86400   ; 1 day
 
 Run the following command.
 
