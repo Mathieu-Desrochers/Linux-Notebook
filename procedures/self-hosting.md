@@ -210,8 +210,7 @@ This can be done with the following command.
 Allowing mail reception
 -----------------------
 We assume your ISP is blocking port 25 inbound and outbound.  
-Login to noip.com and register for Mail Reflector. This service has to be paid for.
-
+Login to noip.com and register for Mail Reflector. This service has to be paid for.  
 Configure the following settings.
 
 - Mail Server: your-domain.com
