@@ -96,8 +96,8 @@ Run the following commands.
     $ sudo ufw allow OpenSSH
     $ sudo ufw enable
 
-Banning failed SSH logins
--------------------------
+Banning failed logins
+---------------------
 Run the following command.
 
     $ sudo apt-get install fail2ban
@@ -210,7 +210,7 @@ This can be done with the following command.
 Setting up a MTA
 ----------------
 We assume your ISP is blocking port 25 inbound and outbound.  
-Login to noip.com and register for Mail Reflector.
+Login to noip.com and register for Mail Reflector.  
 This service has to be paid for.
 
 Configure the following settings.
