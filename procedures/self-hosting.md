@@ -53,14 +53,14 @@ Run the following commands.
     $ ssh pi@192.168.1.102
     password: raspberry
 
-    $ adduser mathieu
-    $ adduser mathieu sudo
+    $ adduser your-name
+    $ adduser your-name sudo
 
     $ exit
 
 Now reconnect as yourself and run the following commands.
 
-    $ ssh mathieu@192.168.1.102
+    $ ssh your-name@192.168.1.102
 
     $ sudo deluser -remove-home pi
     $ sudo groupdel pi
