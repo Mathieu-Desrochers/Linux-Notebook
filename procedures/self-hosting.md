@@ -207,8 +207,8 @@ This can be done with the following command.
     $ dig A your-domain.com +short @ns1.no-ip.com
     111.222.333.444
 
-Setting up a MTA
-----------------
+Allowing mail reception
+-----------------------
 We assume your ISP is blocking port 25 inbound and outbound.  
 Login to noip.com and register for Mail Reflector.  
 This service has to be paid for.
@@ -260,6 +260,8 @@ Replace its content with the following lines.
 
     relayhost = some-relay.your-provider.com
 
+    home_mailbox = Maildir/
+
 Edit the following file.
 
     /etc/ufw/applications.d/postfix
@@ -291,3 +293,41 @@ Run the following command.
 
     $ sudo fail2ban-client reload
     $ sudo postfix start
+
+Allowing mail delivery
+----------------------
+Run the following command.
+
+    $ sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048
+        -keyout /etc/ssl/private/mail.key
+        -out /etc/ssl/certs/mailcert.pem
+
+    $ sudo chmod 600 /etc/ssl/private/mail.key
+
+Run the following command.
+
+    $ apt-get install dovecot-imapd
+
+Edit the following file.
+
+    /etc/dovecot/dovecot.conf
+
+Replace its content with the following lines.
+
+    protocols = imap
+    mail_location = maildir:~/Maildir
+
+    ssl = required
+    ssl_cert = </etc/ssl/certs/mailcert.pem
+    ssl_key = </etc/ssl/private/mail.key
+
+    auth_mechanisms = plain login
+
+    userdb {
+      driver = passwd
+    }
+
+    passdb {
+      driver = pam
+      args = %s
+    }
