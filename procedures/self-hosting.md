@@ -96,10 +96,6 @@ Run the following commands.
     $ sudo ufw allow OpenSSH
     $ sudo ufw enable
 
-Rejected connections will be logged in the following file.
-
-    /var/log/ufw.log
-
 Banning failed SSH logins
 -------------------------
 Run the following command.
@@ -139,8 +135,8 @@ Run the following command.
 
 Banned addresses can be listed using one of the following commands.
 
-    $ sudo ufw status
     $ sudo fail2ban-client status ssh
+    $ sudo fail2ban-client status recidive
 
 Using dynamic DNS with NoIP
 ---------------------------
@@ -156,8 +152,6 @@ Delegate the nameservers to the following addresses.
 - ns4.no-ip.com
 - ns5.no-ip.com
 
-Installing the NoIP client
---------------------------
 Run the following commands.
 
     cd /tmp
@@ -167,8 +161,6 @@ Run the following commands.
     make
     sudo make install
 
-Automatically starting the NoIP client
---------------------------------------
 Create the following file.
 
     /etc/init.d/noip
@@ -204,45 +196,48 @@ With the following content.
 
 Run the following commands.
 
-    sudo chmod 755 /etc/init.d/noip
-    sudo update-rc.d noip defaults
+    $ sudo chmod 755 /etc/init.d/noip
+    $ sudo update-rc.d noip defaults
 
-Generating a self-signed SSL certificate
-----------------------------------------
-Run the following command.
+    $ sudo /etc/init.d/noip start
 
-    $ sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048
-        -keyout /etc/ssl/private/mail.key
-        -out /etc/ssl/certs/mailcert.pem
+Confirm there is a A record for your domain.  
+This can be done with the following command.
 
-    $ sudo chmod 600 /etc/ssl/private/mail.key
+    $ dig A your-domain.com +short @ns1.no-ip.com
+    111.222.333.444
 
 Setting up a MTA
 ----------------
-Login to noip.com and edit the DNS records for your domain.  
-Ensure there is a MX record pointing to your A record.  
-This can be confirmed with the following command.
+We assume your ISP is blocking port 25 inbound and outbound.  
+Login to noip.com and register for Mail Reflector.
+This service has to be paid for.
+
+Configure the following settings.
+
+- Mail Server: your-domain.com
+- Port Number: 2525
+
+Confirm there is a MX record for your domain.  
+This can be done with the following command.
 
     $ dig MX your-domain.com +short @ns1.no-ip.com
-    5 mail.your-domain.com.
-
-Add a mail CNAME record targeting your domain.  
-This can be confirmed with the following command.
-
-    $ host mail.your-domain.com ns1.no-ip.com
-    Using domain server:
-    Name: ns1.no-ip.com
-    Address: 204.16.255.55#53
-    Aliases:
-
-    mail.your-domain.com is an alias for your-domain.com.
-    your-domain.com has address 111.222.333.444
-    your-domain.com mail is handled by 5 mail.your-domain.com.
+    10 mail2.no-ip.com.
+    5 mail1.no-ip.com.
 
 Run the following commands.
 
     $ sudo apt-get install postfix
     $ sudo postfix stop
+
+Edit the following file.
+
+    /etc/postfix/master.cf
+
+Apply the following change.
+
+    ---- smtp      inet  n ...
+    ++++ 2525      inet  n ...
 
 Edit the following file.
 
@@ -263,10 +258,16 @@ Replace its content with the following lines.
     smtpd_recipient_restrictions = reject_unauth_destination
     smtpd_data_restrictions = reject_unauth_pipelining
 
-Your ISP may be forcing you to use its SMTP relay.  
-Append the following line to do so.
-
     relayhost = some-relay.your-provider.com
+
+Edit the following file.
+
+    /etc/ufw/applications.d/postfix
+
+Apply the following change.
+
+    ---- ports=25/tcp
+    ++++ ports=2525/tcp
 
 Run the following commands.
 
@@ -282,7 +283,7 @@ Append the following lines.
 
     [postfix]
     enabled  = true
-    port     = smtp,ssmtp,submission
+    port     = 2525,ssmtp,submission
     filter   = postfix
     logpath  = /var/log/mail.log
 
