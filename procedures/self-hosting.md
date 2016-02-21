@@ -308,4 +308,6 @@ Point your favorite mail client to the local mail folder.
 Run the following command to download your mail.  
 Make sure to do so from your home directory.
 
-    $ maildirsync -r --maildirsync=maildirsync your-domain.com:Maildir Maildir .maildirsync.laptop.gz
+    $ maildirsync -r --maildirsync=maildirsync
+        your-name@your-domain.com:Maildir Maildir
+        .maildirsync.laptop.gz
