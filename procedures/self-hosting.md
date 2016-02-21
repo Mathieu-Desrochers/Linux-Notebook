@@ -301,13 +301,16 @@ the server and your laptop.
 
     $ sudo apt-get install maildirsync
 
-Point your favorite mail client to the local mail folder.
-
-    ~/Maildir
-
 Run the following command to download your mail.  
-Make sure to do so from your home directory.
+Make sure to be in your home directory.
 
     $ maildirsync -r --maildirsync=maildirsync
         your-name@your-domain.com:Maildir Maildir
         .maildirsync.laptop.gz
+
+Configure your favorite mail client.
+
+    Identity: Your Name (your-name@your-domain.com)
+
+    Receive from: Local mail folder (~/Maildir)
+    Send to: some-relay@your-isp.com
