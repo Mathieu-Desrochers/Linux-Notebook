@@ -310,6 +310,5 @@ Make sure to be in your home directory.
 Configure your favorite mail client.
 
     Identity: Your Name (your-name@your-domain.com)
-
     Receive from: Local mail folder (~/Maildir)
     Send to: some-relay@your-isp.com
