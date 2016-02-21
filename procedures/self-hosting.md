@@ -312,7 +312,7 @@ Edit the following file.
 
 Replace its content with the following lines.
 
-    protocols = imap
+    protocols = imaps
     mail_location = maildir:~/Maildir
 
     ssl = required
@@ -329,3 +329,35 @@ Replace its content with the following lines.
       driver = pam
       args = %s
     }
+
+Create the following file.
+
+    /etc/ufw/applications.d/dovecot
+
+With the following content.
+
+    [Dovecot]
+    title=Dovecot
+    description=Secure mail server (IMAPS)
+    ports=993/tcp
+
+Run the following command.
+
+    $ sudo ufw allow Dovecot
+
+Edit the following file.
+
+    /etc/fail2ban/jail.local
+
+Append the following lines.
+
+    [dovecot]
+    enabled = true
+    port    = imaps
+    filter  = dovecot
+    logpath = /var/log/mail.log
+
+Run the following commands.
+
+    $ sudo fail2ban-client reload
+    $ sudo service dovecot restart
