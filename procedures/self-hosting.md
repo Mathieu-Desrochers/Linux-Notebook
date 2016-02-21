@@ -245,10 +245,9 @@ Edit the following file.
 
 Replace its content with the following lines.
 
-    myhostname = mail.your-domain.com
     mydomain = your-domain.com
     myorigin = $mydomain
-    mydestination = $myhostname localhost.$mydomain localhost $mydomain
+    mydestination = localhost.$mydomain localhost $mydomain
     mynetworks_style = host
     relay_domains =
 
