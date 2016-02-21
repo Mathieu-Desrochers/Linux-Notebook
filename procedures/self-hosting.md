@@ -207,16 +207,18 @@ This can be done with the following command.
     $ dig A your-domain.com +short @ns1.no-ip.com
     111.222.333.444
 
-Allowing mail reception
------------------------
+Setting up a mail server
+------------------------
 We assume your ISP is blocking port 25 inbound and outbound.  
-Login to noip.com and register for Mail Reflector. This service has to be paid for.  
+Login to noip.com and register for the Mail Reflector service.  
+This service has to be paid for.
+
 Configure the following settings.
 
 - Mail Server: your-domain.com
 - Port Number: 2525
 
-Confirm there is a MX record for your domain.  
+Confirm NoIP registered a MX record for your domain.  
 This can be done with the following command.
 
     $ dig MX your-domain.com +short @ns1.no-ip.com
@@ -292,72 +294,18 @@ Run the following command.
     $ sudo fail2ban-client reload
     $ sudo postfix start
 
-Allowing mail delivery
-----------------------
-Run the following command.
+Using the mail server remotely
+------------------------------
+Run the following command on both  
+the server and your laptop.
 
-    $ sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048
-        -keyout /etc/ssl/private/mail.key
-        -out /etc/ssl/certs/mailcert.pem
+    $ sudo apt-get install maildirsync
 
-    $ sudo chmod 600 /etc/ssl/private/mail.key
+Point your favorite mail client to the local mail folder.
 
-Run the following command.
+    ~/Maildir
 
-    $ apt-get install dovecot-imapd
+Run the following command to download your mail.  
+Make sure to do so from your home directory.
 
-Edit the following file.
-
-    /etc/dovecot/dovecot.conf
-
-Replace its content with the following lines.
-
-    protocols = imaps
-    mail_location = maildir:~/Maildir
-
-    ssl = required
-    ssl_cert = </etc/ssl/certs/mailcert.pem
-    ssl_key = </etc/ssl/private/mail.key
-
-    auth_mechanisms = plain login
-
-    userdb {
-      driver = passwd
-    }
-
-    passdb {
-      driver = pam
-      args = %s
-    }
-
-Create the following file.
-
-    /etc/ufw/applications.d/dovecot
-
-With the following content.
-
-    [Dovecot]
-    title=Dovecot
-    description=Secure mail server (IMAPS)
-    ports=993/tcp
-
-Run the following command.
-
-    $ sudo ufw allow Dovecot
-
-Edit the following file.
-
-    /etc/fail2ban/jail.local
-
-Append the following lines.
-
-    [dovecot]
-    enabled = true
-    port    = imaps
-    filter  = dovecot
-    logpath = /var/log/mail.log
-
-Run the following commands.
-
-    $ sudo fail2ban-client reload
-    $ sudo service dovecot restart
+    $ maildirsync -r --maildirsync=maildirsync your-domain.com:Maildir Maildir .maildirsync.gz
