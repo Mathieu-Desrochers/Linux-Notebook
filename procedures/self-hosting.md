@@ -53,17 +53,15 @@ Run the following commands.
     $ ssh pi@192.168.1.102
     password: raspberry
 
-    $ adduser your-name
-    $ adduser your-name sudo
+    $ sudo adduser your-name
+    $ sudo adduser your-name sudo
 
     $ exit
 
 Now reconnect as yourself and run the following commands.
 
     $ ssh your-name@192.168.1.102
-
     $ sudo deluser -remove-home pi
-    $ sudo groupdel pi
 
 Upgrading the OS
 ----------------
@@ -79,6 +77,22 @@ Run the following commands.
     $ sudo hostnamectl set-hostname tombstone
     $ dpkg-reconfigure tzdata
 
+Edit the following file.
+
+    /etc/ssh/sshd_conf
+
+Apply the following changes.
+
+    ---- Port 22
+    ++++ Port 2222
+
+    ++++ PermitRootLogin no
+    ++++ AllowUsers your-name
+
+Run the following command and reconnect on port 2222.
+
+    $ sudo invoke-rc.d ssh restart
+
 Setting up a firewall
 ---------------------
 Run the following command to install the firewall.
@@ -93,7 +107,7 @@ Run the following commands.
 
     $ sudo ufw default allow outgoing
     $ sudo ufw default deny incoming
-    $ sudo ufw allow OpenSSH
+    $ sudo ufw allow 2222/tcp
     $ sudo ufw enable
 
 Banning failed logins
@@ -116,7 +130,7 @@ Replace its content with the following lines.
 
     [ssh]
     enabled  = true
-    port     = ssh
+    port     = 2222
     filter   = sshd
     logpath  = /var/log/auth.log
     maxretry = 6
@@ -141,7 +155,8 @@ Banned addresses can be listed using one of the following commands.
 Using dynamic DNS with NoIP
 ---------------------------
 Open an account with noip.com for your existing domain name.  
-This service has to be paid for.
+This service has to be paid for, a better alternative would be  
+having a static IP address.
 
 Login to godaddy.com and select your existing domain name.  
 Delegate the nameservers to the following addresses.
@@ -211,7 +226,8 @@ Setting up a mail server
 ------------------------
 We assume your ISP is blocking port 25 inbound and outbound.  
 Login to noip.com and register for the Mail Reflector service.  
-This service has to be paid for.
+This service has to be paid for, a better alternative would be  
+having a static IP address with all ports opened.
 
 Configure the following settings.
 
@@ -230,6 +246,11 @@ Run the following commands.
     $ sudo apt-get install postfix
     $ sudo postfix stop
 
+Configure the following settings when prompted.
+
+- Internet Site
+- your-domain.com
+
 Edit the following file.
 
     /etc/postfix/master.cf
@@ -247,7 +268,7 @@ Replace its content with the following lines.
 
     mydomain = your-domain.com
     myorigin = $mydomain
-    mydestination = localhost.$mydomain localhost $mydomain
+    mydestination = $mydomain
     mynetworks_style = host
     relay_domains =
 
@@ -263,18 +284,17 @@ Replace its content with the following lines.
 
 Edit the following file.
 
-    /etc/ufw/applications.d/postfix
+    /etc/aliases
 
-Apply the following change.
+Define the following aliases.
 
-    ---- ports=25/tcp
-    ++++ ports=2525/tcp
+    postmaster: your-name
+    mail: your-name
+    root: your-name
 
 Run the following commands.
 
-    $ sudo ufw allow 'Postfix'
-    $ sudo ufw allow 'Postfix SMTPS'
-    $ sudo ufw allow 'Postfix Submission'
+    $ sudo ufw allow 2525/tcp
 
 Edit the following file.
 
@@ -284,13 +304,14 @@ Append the following lines.
 
     [postfix]
     enabled  = true
-    port     = 2525,ssmtp,submission
+    port     = 2525
     filter   = postfix
     logpath  = /var/log/mail.log
 
 Run the following command.
 
     $ sudo fail2ban-client reload
+    $ sudo newaliases
     $ sudo postfix start
 
 Using the mail server remotely
@@ -299,6 +320,15 @@ Run the following command on both
 the server and your laptop.
 
     $ sudo apt-get install maildirsync
+
+Create the following file on your laptop.
+
+    ~/.ssh/config
+
+With the following content.
+
+    Host mathieu-desrochers.com
+    Port 2222
 
 Run the following command to download your mail.  
 Make sure to be in your home directory.
@@ -309,6 +339,6 @@ Make sure to be in your home directory.
 
 Configure your favorite mail client.
 
-    Identity: Your Name (your-name@your-domain.com)
+    Identity: Your Name (mail@your-domain.com)
     Receive from: Local mail folder (~/Maildir)
     Send to: some-relay@your-isp.com
