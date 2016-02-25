@@ -77,6 +77,18 @@ Run the following commands.
     $ sudo hostnamectl set-hostname tombstone
     $ dpkg-reconfigure tzdata
 
+Configuring SSH
+---------------
+Run the following command on your laptop.
+
+    $ rcp somewhere/id_rsa.pub your-name@192.168.1.102:id_rsa.pub
+
+Run the following commands on the server.
+
+    $ mkdir .ssh
+    $ mv ~/id_rsa.pub .ssh/authorized_keys
+    $ chmod 600 .ssh/authorized_keys
+
 Edit the following file.
 
     /etc/ssh/sshd_conf
@@ -89,9 +101,34 @@ Apply the following changes.
     ++++ PermitRootLogin no
     ++++ AllowUsers your-name
 
-Run the following command and reconnect on port 2222.
+    ---- #AuthorizedKeysFile      %h/.ssh/authorized_keys
+    ++++ AuthorizedKeysFile      %h/.ssh/authorized_keys
 
-    $ sudo invoke-rc.d ssh restart
+    ---- #PasswordAuthentication yes
+    ++++ PasswordAuthentication no
+
+Run the following command.
+
+    $ sudo /etc/init.d/ssh restart
+
+Disconnect from the server.  
+Run the following commands on your laptop.
+
+    $ cp somewhere/id_rsa ~/.ssh
+    $ chmod 600 ~/.ssh/id_rsa
+
+Create the following file.
+
+    ~/.ssh/config
+
+With the following content.
+
+    Host 192.168.1.102
+    Port 2222
+
+Reconnect to the server using the following command.
+
+    $ ssh 192.168.1.102
 
 Setting up a firewall
 ---------------------
@@ -321,16 +358,7 @@ the server and your laptop.
 
     $ sudo apt-get install maildirsync
 
-Create the following file on your laptop.
-
-    ~/.ssh/config
-
-With the following content.
-
-    Host mathieu-desrochers.com
-    Port 2222
-
-Run the following command to download your mail.  
+Run the following command on your laptop to download your mail.  
 Make sure to be in your home directory.
 
     $ maildirsync -r --maildirsync=maildirsync
