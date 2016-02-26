@@ -14,8 +14,8 @@ Run the following command to locate its device name.
     /dev/sdX0       1.3G  831M  362M  70% /media/xxx
     ...
 
-Get the one mounted under media, where X is a letter and 0 is a number.  
-Double check the device size just to make sure.
+Note the one mounted under media, where X is a letter and 0 is a number.  
+Double check the device size to make sure.
 
 Run the following commands.
 
@@ -28,14 +28,14 @@ Time for a first boot.
 
 Figuring out the pi's IP address
 --------------------------------
-Still connected to your computer, run the following command.
+Run the following command from your laptop.
 
     $ ip addr
     ...
     3: wlan0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc mq state UP group default qlen 1000
     ...
 
-Get the name of your connected network interface.  
+Note the name of your connected network interface.  
 Run the following command.
 
     $ sudo arp-scan --interface=wlan0 --localnet
@@ -43,7 +43,7 @@ Run the following command.
     192.168.1.102   b8:27:eb:cb:c2:cf       (Unknown)
     ...
 
-Get the IP address on the line showing b8:27.  
+Note the IP address for the MAC address starting with b8:27.  
 This is the pi's current address on your network.
 
 Connecting to the pi
@@ -55,7 +55,6 @@ Run the following commands.
 
     $ sudo adduser your-name
     $ sudo adduser your-name sudo
-
     $ exit
 
 Now reconnect as yourself and run the following commands.
@@ -63,25 +62,22 @@ Now reconnect as yourself and run the following commands.
     $ ssh your-name@192.168.1.102
     $ sudo deluser -remove-home pi
 
-Upgrading the OS
-----------------
+Basic setup
+-----------
 Run the following commands.
 
     $ sudo apt-get update
     $ sudo apt-get upgrade
-
-Basic configuration
--------------------
-Run the following commands.
 
     $ sudo hostnamectl set-hostname tombstone
     $ dpkg-reconfigure tzdata
 
 Configuring SSH
 ---------------
-Run the following command on your laptop.
+Run the following command from your laptop.  
+Do so from a folder containing your public key.
 
-    $ rcp somewhere/id_rsa.pub your-name@192.168.1.102:id_rsa.pub
+    $ rcp id_rsa.pub your-name@192.168.1.102:id_rsa.pub
 
 Run the following commands on the server.
 
@@ -89,14 +85,11 @@ Run the following commands on the server.
     $ mv ~/id_rsa.pub .ssh/authorized_keys
     $ chmod 600 .ssh/authorized_keys
 
-Edit the following file.
+Edit the following file on the server.
 
     /etc/ssh/sshd_conf
 
 Apply the following changes.
-
-    ---- Port 22
-    ++++ Port 2222
 
     ++++ PermitRootLogin no
     ++++ AllowUsers your-name
@@ -107,28 +100,17 @@ Apply the following changes.
     ---- #PasswordAuthentication yes
     ++++ PasswordAuthentication no
 
-Run the following command.
+Run the following command on the server.
 
     $ sudo /etc/init.d/ssh restart
 
-Disconnect from the server.  
-Run the following commands on your laptop.
+Run the following commands from your laptop.  
+Do so from a folder containing your private key.
 
-    $ cp somewhere/id_rsa ~/.ssh
+    $ cp id_rsa ~/.ssh
     $ chmod 600 ~/.ssh/id_rsa
 
-Create the following file.
-
-    ~/.ssh/config
-
-With the following content.
-
-    Host 192.168.1.102
-    Port 2222
-
-Reconnect to the server using the following command.
-
-    $ ssh 192.168.1.102
+Reconnect to the server without a password.
 
 Setting up a firewall
 ---------------------
@@ -144,11 +126,11 @@ Run the following commands.
 
     $ sudo ufw default allow outgoing
     $ sudo ufw default deny incoming
-    $ sudo ufw allow 2222/tcp
+    $ sudo ufw allow 22/tcp
     $ sudo ufw enable
 
-Banning failed logins
----------------------
+Setting up a login throttler
+----------------------------
 Run the following command.
 
     $ sudo apt-get install fail2ban
@@ -158,19 +140,13 @@ Edit the following file.
 
     /etc/fail2ban/jail.local
 
-Replace its content with the following lines.
+Replace its content with the following lines.  
+It won't monitor any service for now.
 
     [DEFAULT]
     bantime  = 600  ; 10 minutes
     findtime = 600  ; 10 minutes
     maxretry = 3
-
-    [ssh]
-    enabled  = true
-    port     = 2222
-    filter   = sshd
-    logpath  = /var/log/auth.log
-    maxretry = 6
 
     [recidive]
     enabled  = true
@@ -183,11 +159,6 @@ Replace its content with the following lines.
 Run the following command.
 
     $ sudo fail2ban-client reload
-
-Banned addresses can be listed using one of the following commands.
-
-    $ sudo fail2ban-client status ssh
-    $ sudo fail2ban-client status recidive
 
 Using dynamic DNS with NoIP
 ---------------------------
@@ -283,7 +254,7 @@ Run the following commands.
     $ sudo apt-get install postfix
     $ sudo postfix stop
 
-Configure the following settings when prompted.
+Answer the following when prompted.
 
 - Internet Site
 - your-domain.com
