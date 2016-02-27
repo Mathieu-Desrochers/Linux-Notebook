@@ -70,7 +70,7 @@ Run the following commands.
     $ sudo apt-get upgrade
 
     $ sudo hostnamectl set-hostname tombstone
-    $ dpkg-reconfigure tzdata
+    $ sudo dpkg-reconfigure tzdata
 
 Configuring SSH
 ---------------
@@ -87,10 +87,11 @@ Run the following commands on the server.
 
 Edit the following file on the server.
 
-    /etc/ssh/sshd_conf
+    /etc/ssh/sshd_config
 
 Apply the following changes.
 
+    ---- PermitRootLogin without-password
     ++++ PermitRootLogin no
     ++++ AllowUsers your-name
 
