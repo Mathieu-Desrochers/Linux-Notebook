@@ -313,6 +313,18 @@ Apply the following changes.
     ++++ smtpd_sasl_type = dovecot
     ++++ smtpd_sasl_path = private/auth
 
+Edit the following file.
+
+    /etc/postfix/master.cf
+
+Apply the following changes.
+
+    ---- # smtps     inet  n       -       -       -       -       smtpd
+    ---- #   -o syslog_name=postfix/smtps
+
+    ++++ smtps     inet  n       -       -       -       -       smtpd
+    ++++   -o syslog_name=postfix/smtps
+
 Run the following commands.
 
     $ sudo postfix start
