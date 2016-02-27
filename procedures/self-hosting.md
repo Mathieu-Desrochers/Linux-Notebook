@@ -141,13 +141,18 @@ Edit the following file.
 
     /etc/fail2ban/jail.local
 
-Replace its content with the following lines.  
-It won't monitor any service for now.
+Replace its content with the following lines.
 
     [DEFAULT]
     bantime  = 600  ; 10 minutes
     findtime = 600  ; 10 minutes
     maxretry = 3
+
+    [ssh-key]
+    enabled  = true
+    port     = 22
+    filter   = sshd-key
+    logpath  = /var/log/auth.log
 
     [recidive]
     enabled  = true
@@ -157,9 +162,31 @@ It won't monitor any service for now.
     bantime  = 604800  ; 1 week
     findtime = 86400   ; 1 day
 
+Create the following file.
+
+    /etc/fail2ban/filter.d/sshd-key.conf
+
+With the following content.
+
+    [INCLUDES]
+    before = common.conf
+
+    [Definition]
+    _daemon = sshd
+    failregex = ^%(__prefix_line)sConnection closed by <HOST> \[preauth\]\s*$
+    ignoreregex =
+
 Run the following command.
 
     $ sudo fail2ban-client reload
+
+Generating a self signed SSL key
+--------------------------------
+Run the following commands.
+
+    $ sudo openssl req -x509 -nodes -days 3650 -newkey rsa:2048
+        -keyout /etc/ssl/private/mail.key
+        -out /etc/ssl/certs/mailcert.pem
 
 Setting up a mail server
 ------------------------
@@ -185,6 +212,7 @@ Edit the following file.
 
 Replace its content with the following lines.
 
+    myhostname = your-domain.com
     mydomain = your-domain.com
     myorigin = $mydomain
     mydestination = $mydomain
@@ -197,9 +225,18 @@ Replace its content with the following lines.
     smtpd_recipient_restrictions = reject_unauth_destination
     smtpd_data_restrictions = reject_unauth_pipelining
 
-    relayhost = some-relay.your-provider.com
+    smtp_tls_security_level = may
+
+    smtpd_tls_security_level = may
+    smtpd_tls_cert_file = /etc/ssl/certs/mailcert.pem
+    smtpd_tls_key_file = /etc/ssl/private/mail.key
 
     home_mailbox = Maildir/
+
+Run the following commands.
+
+    $ sudo deluser -remove-home mail
+    $ sudo adduser mail
 
 Edit the following file.
 
@@ -207,9 +244,8 @@ Edit the following file.
 
 Define the following aliases.
 
-    postmaster: your-name
-    mail: your-name
-    root: your-name
+    postmaster: mail
+    root: mail
 
 Run the following commands.
 
@@ -219,7 +255,7 @@ Edit the following file.
 
     /etc/fail2ban/jail.local
 
-Append the following lines.
+Add the following lines.
 
     [postfix]
     enabled  = true
