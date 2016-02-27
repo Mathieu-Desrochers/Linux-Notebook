@@ -57,7 +57,7 @@ Run the following commands.
     $ sudo adduser your-name sudo
     $ exit
 
-Now reconnect as yourself and run the following commands.
+Reconnect as yourself and run the following commands.
 
     $ ssh your-name@192.168.1.102
     $ sudo deluser -remove-home pi
@@ -160,94 +160,13 @@ Run the following command.
 
     $ sudo fail2ban-client reload
 
-Using dynamic DNS with NoIP
----------------------------
-Open an account with noip.com for your existing domain name.  
-This service has to be paid for, a better alternative would be  
-having a static IP address.
-
-Login to godaddy.com and select your existing domain name.  
-Delegate the nameservers to the following addresses.
-
-- ns1.no-ip.com
-- ns2.no-ip.com
-- ns3.no-ip.com
-- ns4.no-ip.com
-- ns5.no-ip.com
-
-Run the following commands.
-
-    cd /tmp
-    wget http://www.no-ip.com/client/linux/noip-duc-linux.tar.gz
-    tar xzf noip-duc-linux.tar.gz
-    cd noip-2.1.9-1
-    make
-    sudo make install
-
-Create the following file.
-
-    /etc/init.d/noip
-
-With the following content.
-
-    #! /bin/sh
-
-    ### BEGIN INIT INFO
-    # Provides:          noip
-    # Required-Start:    $remote_fs $syslog
-    # Required-Stop:     $remote_fs $syslog
-    # Default-Start:     2 3 4 5
-    # Default-Stop:      0 1 6
-    ### END INIT INFO
-
-    case "$1" in
-      start)
-        echo "Starting noip"
-        /usr/local/bin/noip2
-        ;;
-      stop)
-        echo "Stopping noip"
-        killall noip2
-        ;;
-      *)
-        echo "Usage: /etc/init.d/noip {start|stop}"
-        exit 1
-        ;;
-    esac
-
-    exit 0
-
-Run the following commands.
-
-    $ sudo chmod 755 /etc/init.d/noip
-    $ sudo update-rc.d noip defaults
-
-    $ sudo /etc/init.d/noip start
-
-Confirm there is a A record for your domain.  
-This can be done with the following command.
-
-    $ dig A your-domain.com +short @ns1.no-ip.com
-    111.222.333.444
-
 Setting up a mail server
 ------------------------
-We assume your ISP is blocking port 25 inbound and outbound.  
-Login to noip.com and register for the Mail Reflector service.  
-This service has to be paid for, a better alternative would be  
-having a static IP address with all ports opened.
+Create a MX record pointing to your server.  
+This can be confirmed with the following command.
 
-Configure the following settings.
-
-- Mail Server: your-domain.com
-- Port Number: 2525
-
-Confirm NoIP registered a MX record for your domain.  
-This can be done with the following command.
-
-    $ dig MX your-domain.com +short @ns1.no-ip.com
-    10 mail2.no-ip.com.
-    5 mail1.no-ip.com.
+    $ dig MX your-domain.com +short
+    50 your-domain.com
 
 Run the following commands.
 
@@ -258,15 +177,6 @@ Answer the following when prompted.
 
 - Internet Site
 - your-domain.com
-
-Edit the following file.
-
-    /etc/postfix/master.cf
-
-Apply the following change.
-
-    ---- smtp      inet  n ...
-    ++++ 2525      inet  n ...
 
 Edit the following file.
 
@@ -302,7 +212,7 @@ Define the following aliases.
 
 Run the following commands.
 
-    $ sudo ufw allow 2525/tcp
+    $ sudo ufw allow 25/tcp
 
 Edit the following file.
 
@@ -312,7 +222,7 @@ Append the following lines.
 
     [postfix]
     enabled  = true
-    port     = 2525
+    port     = 25
     filter   = postfix
     logpath  = /var/log/mail.log
 
@@ -321,23 +231,3 @@ Run the following command.
     $ sudo fail2ban-client reload
     $ sudo newaliases
     $ sudo postfix start
-
-Using the mail server remotely
-------------------------------
-Run the following command on both  
-the server and your laptop.
-
-    $ sudo apt-get install maildirsync
-
-Run the following command on your laptop to download your mail.  
-Make sure to be in your home directory.
-
-    $ maildirsync -r --maildirsync=maildirsync
-        your-name@your-domain.com:Maildir Maildir
-        .maildirsync.laptop.gz
-
-Configure your favorite mail client.
-
-    Identity: Your Name (mail@your-domain.com)
-    Receive from: Local mail folder (~/Maildir)
-    Send to: some-relay@your-isp.com
