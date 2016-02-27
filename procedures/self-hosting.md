@@ -180,8 +180,8 @@ Run the following command.
 
     $ sudo fail2ban-client reload
 
-Generating a self signed SSL key
---------------------------------
+Generating a self signed SSL certificate
+----------------------------------------
 Run the following commands.
 
     $ sudo openssl req -x509 -nodes -days 3650 -newkey rsa:2048
@@ -226,7 +226,6 @@ Replace its content with the following lines.
     smtpd_data_restrictions = reject_unauth_pipelining
 
     smtp_tls_security_level = may
-
     smtpd_tls_security_level = may
     smtpd_tls_cert_file = /etc/ssl/certs/mailcert.pem
     smtpd_tls_key_file = /etc/ssl/private/mail.key
@@ -268,3 +267,53 @@ Run the following command.
     $ sudo fail2ban-client reload
     $ sudo newaliases
     $ sudo postfix start
+
+Allowing remote usage of the mail server
+----------------------------------------
+Run the following commands.
+
+    $ sudo postfix stop
+    $ sudo apt-get install dovecot-core dovecot-imapd
+
+Edit the following file.
+
+    /etc/dovecot/dovecot.conf
+
+Replace its content with the following lines.
+
+    ssl = required
+    ssl_cert = </etc/ssl/certs/mailcert.pem
+    ssl_key = </etc/ssl/private/mail.key
+
+    auth_mechanisms = plain
+
+    passdb {
+      args = %s
+      driver = pam
+    }
+
+    service auth {
+      unix_listener /var/spool/postfix/private/auth {
+        mode = 0660
+        user = postfix
+        group = postfix
+      }
+    }
+
+Edit the following file.
+
+    /etc/postfix/main.cf
+
+Apply the following changes.
+
+    ---- smtpd_relay_restrictions = reject_unauth_destination
+    ++++ smtpd_relay_restrictions = permit_sasl_authenticated, reject_unauth_destination
+
+    ++++ smtpd_sasl_auth_enable = yes
+    ++++ smtpd_sasl_type = dovecot
+    ++++ smtpd_sasl_path = private/auth
+
+Run the following commands.
+
+    $ sudo postfix start
+    $ sudo service dovecot restart
