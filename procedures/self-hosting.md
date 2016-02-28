@@ -130,8 +130,8 @@ Run the following commands.
     $ sudo ufw allow 22/tcp
     $ sudo ufw enable
 
-Setting up a login throttler
-----------------------------
+Setting up an abuse throttler
+-----------------------------
 Run the following command.
 
     $ sudo apt-get install fail2ban
@@ -148,10 +148,10 @@ Replace its content with the following lines.
     findtime = 600  ; 10 minutes
     maxretry = 3
 
-    [ssh-key]
+    [ssh-local]
     enabled  = true
-    port     = 22
-    filter   = sshd-key
+    port     = ssh
+    filter   = sshd-local
     logpath  = /var/log/auth.log
 
     [recidive]
@@ -164,7 +164,7 @@ Replace its content with the following lines.
 
 Create the following file.
 
-    /etc/fail2ban/filter.d/sshd-key.conf
+    /etc/fail2ban/filter.d/sshd-local.conf
 
 With the following content.
 
@@ -173,7 +173,8 @@ With the following content.
 
     [Definition]
     _daemon = sshd
-    failregex = ^%(__prefix_line)sConnection closed by <HOST> \[preauth\]\s*$
+    failregex = Connection closed by <HOST> \[preauth\]
+                Received disconnect from <HOST>: \d*: Bye Bye \[preauth\]
     ignoreregex =
 
 Run the following command.
@@ -219,11 +220,8 @@ Replace its content with the following lines.
     mynetworks_style = host
     relay_domains =
 
-    smtpd_helo_restrictions = reject_unknown_helo_hostname
-    smtpd_sender_restrictions = reject_unknown_sender_domain
     smtpd_relay_restrictions = reject_unauth_destination
     smtpd_recipient_restrictions = reject_unauth_destination
-    smtpd_data_restrictions = reject_unauth_pipelining
 
     smtp_tls_security_level = may
     smtpd_tls_security_level = may
@@ -258,7 +256,7 @@ Add the following lines.
 
     [postfix]
     enabled  = true
-    port     = 25
+    port     = smtp,ssmtp,submission
     filter   = postfix
     logpath  = /var/log/mail.log
 
@@ -268,11 +266,10 @@ Run the following command.
     $ sudo newaliases
     $ sudo postfix start
 
-Allowing remote usage of the mail server
-----------------------------------------
-Run the following commands.
+Using the mail server remotely
+------------------------------
+Run the following command.
 
-    $ sudo postfix stop
     $ sudo apt-get install dovecot-core dovecot-imapd
 
 Edit the following file.
@@ -309,6 +306,9 @@ Apply the following changes.
     ---- smtpd_relay_restrictions = reject_unauth_destination
     ++++ smtpd_relay_restrictions = permit_sasl_authenticated, reject_unauth_destination
 
+    ---- smtpd_recipient_restrictions = reject_unauth_destination
+    ++++ smtpd_recipient_restrictions = permit_sasl_authenticated, reject_unauth_destination
+
     ++++ smtpd_sasl_auth_enable = yes
     ++++ smtpd_sasl_type = dovecot
     ++++ smtpd_sasl_path = private/auth
@@ -319,13 +319,51 @@ Edit the following file.
 
 Apply the following changes.
 
-    ---- # smtps     inet  n       -       -       -       -       smtpd
+    ---- # smtps inet  n  -  -  -  -  smtpd
     ---- #   -o syslog_name=postfix/smtps
 
-    ++++ smtps     inet  n       -       -       -       -       smtpd
+    ++++ smtps inet  n  -  -  -  -  smtpd
     ++++   -o syslog_name=postfix/smtps
 
 Run the following commands.
 
-    $ sudo postfix start
+    $ sudo ufw allow 465/tcp
+
+Edit the following file.
+
+    /etc/fail2ban/jail.local
+
+Add the following lines.
+
+    [dovecot]
+    enabled  = false
+    port     = smtp,ssmtp,submission,imap2,imap3,imaps,pop3,pop3s
+    filter   = dovecot
+    logpath  = /var/log/mail.log
+
+    [dovecot-local]
+    enabled  = true
+    port     = smtp,ssmtp,submission,imap2,imap3,imaps,pop3,pop3s
+    filter   = dovecot-local
+    logpath  = /var/log/mail.warn
+
+Create the following file.
+
+    /etc/fail2ban/filter.d/dovecot-local.conf
+
+With the following content.
+
+    [INCLUDES]
+    before = common.conf
+
+    [Definition]
+    _daemon = dovecot
+    failregex = pam\(.*,<HOST>\): pam_authenticate\(\) failed
+                \[<HOST>\]: SASL PLAIN authentication failed
+    ignoreregex =
+
+Run the following commands.
+
+    $ sudo fail2ban-client reload
+    $ sudo postfix reload
     $ sudo service dovecot restart
