@@ -345,3 +345,24 @@ Run the following commands.
     $ sudo fail2ban-client reload
     $ sudo postfix reload
     $ sudo service dovecot restart
+
+Configure your favorite mail client likewise.  
+Inbound:
+
+    - Protocol: IMAP
+    - Server: your-domain.com
+    - Port: 993
+    - Username: mail
+    - Password: mail's linux password
+    - Encryption: TLS
+    - Authentication: Clear text
+
+Outbound:
+
+    - Protocol: SMTP
+    - Server: your-domain.com
+    - Port: 587
+    - Username: mail
+    - Password: mail's linux password
+    - Encryption: TLS
+    - Authentication: Plain
