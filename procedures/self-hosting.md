@@ -148,10 +148,10 @@ Replace its content with the following lines.
     findtime = 600  ; 10 minutes
     maxretry = 3
 
-    [ssh-local]
+    [ssh]
     enabled  = true
     port     = ssh
-    filter   = sshd-local
+    filter   = sshd
     logpath  = /var/log/auth.log
 
     [recidive]
@@ -161,21 +161,6 @@ Replace its content with the following lines.
     action   = iptables-allports[name=recidive]
     bantime  = 604800  ; 1 week
     findtime = 86400   ; 1 day
-
-Create the following file.
-
-    /etc/fail2ban/filter.d/sshd-local.conf
-
-With the following content.
-
-    [INCLUDES]
-    before = common.conf
-
-    [Definition]
-    _daemon = sshd
-    failregex = Connection closed by <HOST> \[preauth\]
-                Received disconnect from <HOST>: \d*: Bye Bye \[preauth\]
-    ignoreregex =
 
 Run the following command.
 
@@ -278,16 +263,23 @@ Edit the following file.
 
 Replace its content with the following lines.
 
-    ssl = required
-    ssl_cert = </etc/ssl/certs/mailcert.pem
-    ssl_key = </etc/ssl/private/mail.key
+    protocols = imaps
 
-    auth_mechanisms = plain
+    userdb {
+      driver = passwd
+    }
 
     passdb {
       args = %s
       driver = pam
     }
+
+    ssl = required
+    ssl_cert = </etc/ssl/certs/mailcert.pem
+    ssl_key = </etc/ssl/private/mail.key
+    auth_mechanisms = plain
+
+    mail_location = maildir:~/Maildir
 
     service auth {
       unix_listener /var/spool/postfix/private/auth {
@@ -319,15 +311,16 @@ Edit the following file.
 
 Apply the following changes.
 
-    ---- # smtps inet  n  -  -  -  -  smtpd
-    ---- #   -o syslog_name=postfix/smtps
+    ---- #submission inet n       -       -       -       -       smtpd
+    ---- #  -o syslog_name=postfix/submission
 
-    ++++ smtps inet  n  -  -  -  -  smtpd
-    ++++   -o syslog_name=postfix/smtps
+    ++++ submission inet n       -       -       -       -       smtpd
+    ++++   -o syslog_name=postfix/submission
 
 Run the following commands.
 
-    $ sudo ufw allow 465/tcp
+    $ sudo ufw allow 587/tcp
+    $ sudo ufw allow 993/tcp
 
 Edit the following file.
 
@@ -335,32 +328,17 @@ Edit the following file.
 
 Add the following lines.
 
-    [dovecot]
-    enabled  = false
-    port     = smtp,ssmtp,submission,imap2,imap3,imaps,pop3,pop3s
-    filter   = dovecot
-    logpath  = /var/log/mail.log
-
-    [dovecot-local]
+    [sasl]
     enabled  = true
     port     = smtp,ssmtp,submission,imap2,imap3,imaps,pop3,pop3s
-    filter   = dovecot-local
-    logpath  = /var/log/mail.warn
+    filter   = postfix-sasl
+    logpath  = /var/log/mail.log
 
-Create the following file.
-
-    /etc/fail2ban/filter.d/dovecot-local.conf
-
-With the following content.
-
-    [INCLUDES]
-    before = common.conf
-
-    [Definition]
-    _daemon = dovecot
-    failregex = pam\(.*,<HOST>\): pam_authenticate\(\) failed
-                \[<HOST>\]: SASL PLAIN authentication failed
-    ignoreregex =
+    [dovecot]
+    enabled = true
+    port    = smtp,ssmtp,submission,imap2,imap3,imaps,pop3,pop3s
+    filter  = dovecot
+    logpath = /var/log/mail.log
 
 Run the following commands.
 
