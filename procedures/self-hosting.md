@@ -366,3 +366,51 @@ Outbound:
     - Password: mail's linux password
     - Encryption: TLS
     - Authentication: Plain
+
+Setting up a git repository
+---------------------------
+Run the following commands.
+
+    $ sudo apt-get install git-core
+
+Local fail2ban rules
+--------------------
+The tool ships with pretty good filters, but some unmatched  
+log entries were detected during manual scans.
+
+Create the following file.
+
+    /etc/fail2ban/filters.d/sshd-local.conf
+
+With the following content.
+
+    [INCLUDES]
+    before = common.conf
+
+    [Definition]
+    _daemon = sshd
+    failregex = Invalid user .* from <HOST>
+                User .* from <HOST> not allowed because not listed in AllowUsers
+                Received disconnect from <HOST>: 11:  \[preauth\]
+                Received disconnect from <HOST>: 11: Bye Bye \[preauth\]
+                Received disconnect from <HOST>: 3: .*: Auth fail \[preauth\]
+                Did not receive identification string from <HOST>
+                Connection closed by <HOST> \[preauth\]
+                Address <HOST> maps to .*, but this does not map back to the address - POSSIBLE BREAK-IN ATTEMPT!
+    ignoreregex =
+
+Edit the following file.
+
+    /etc/fail2ban/jail.local
+
+Apply the following changes.
+
+    ++++ [ssh-local]
+    ++++ enabled  = true
+    ++++ port     = ssh
+    ++++ filter   = sshd-local
+    ++++ logpath  = /var/log/auth.log
+
+Run the following command.
+
+    $ sudo fail2ban-client reload
