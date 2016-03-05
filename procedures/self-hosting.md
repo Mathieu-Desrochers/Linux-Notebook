@@ -1,3 +1,11 @@
+Requirements
+------------
+You will need the following.
+
+    - 1 Raspberry PI
+    - 1 Static IP address (ask your ISP)
+    - 2 drops of dedication
+
 Downloading the raspbian image
 ------------------------------
 Get the latest raspbian lite image from the following site.
