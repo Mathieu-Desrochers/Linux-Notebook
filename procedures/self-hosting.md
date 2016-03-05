@@ -70,6 +70,35 @@ Reconnect as yourself and run the following commands.
     $ ssh your-name@192.168.1.102
     $ sudo deluser -remove-home pi
 
+Resizing the file system to fill the SD card
+--------------------------------------------
+Run the following command.
+
+    $ sudo fdisk /dev/mmcblk0
+
+Type the command p.
+
+    Device         Boot  Start     End Sectors  Size Id Type
+    /dev/mmcblk0p1        8192  131071  122880   60M  c W95 FAT32 (LBA)
+    /dev/mmcblk0p2      131072 2848767 2717696  1.3G 83 Linux
+
+Note the start of the Linux partition.  
+Type the following commands.
+
+    - d
+    - 2
+    - n
+    - p
+    - 2
+    - 131072
+    - enter
+    - w
+
+Run the following commands.
+
+    $ sudo shutdown --reboot now
+    $ sudo resize2fs /dev/mmcblk0p2
+
 Basic setup
 -----------
 Run the following commands.
