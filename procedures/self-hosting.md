@@ -377,9 +377,19 @@ Outbound:
 
 Setting up a git repository
 ---------------------------
-Run the following commands.
+Run the following command on the server.
 
     $ sudo apt-get install git-core
+
+Run the following commands on the server.
+
+    $ mkdir ~/some-project
+    $ cd ~/some-project
+    $ git init --bare
+
+Run the following command from your laptop.
+
+    $ git clone your-name@your-domain.com:/home/your-name/some-project
 
 Local fail2ban rules
 --------------------
