@@ -70,8 +70,8 @@ Reconnect as yourself and run the following commands.
     $ ssh your-name@192.168.1.102
     $ sudo deluser -remove-home pi
 
-Resizing the file system to fill the SD card
---------------------------------------------
+Resizing the file system
+------------------------
 Run the following command.
 
     $ sudo fdisk /dev/mmcblk0
