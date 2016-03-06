@@ -203,6 +203,42 @@ Run the following command.
 
     $ sudo fail2ban-client reload
 
+Sending SMS notifications on successful logins
+----------------------------------------------
+Most service providers will give you an email address  
+that relays messages to your phone via SMS. An alternative would  
+be to register an account with http://smsgateway.ca/
+
+Create the following file.
+
+    /usr/local/bin/notify-login
+
+With the following content.
+
+    #!/bin/sh
+    curl "http://smsgateway.ca/sendsms.aspx?
+      CellNumber=your-number&
+      MessageBody=Login+on+tombstone%3A+$PAM_USER+on+`date +%Y%m%d%H%M%S`&
+      AccountKey=your-key"
+
+Run the following command.
+
+    $ sudo chmod u+x /usr/local/bin/notify-login
+
+Edit the following file.
+
+    /etc/pam.d/common-auth
+
+Apply the following changes.
+
+         auth  required  pam_permit.so
+    ++++ auth  optional  pam_exec.so /usr/local/bin/notify-login
+
+Run the following commands.
+
+    $ sudo chmod 700 /usr/local/bin/notify-login
+    $ sudo shutdown --reboot now
+
 Generating a self signed SSL certificate
 ----------------------------------------
 Run the following commands.
