@@ -205,8 +205,8 @@ Run the following command.
 
 Sending SMS notifications on successful logins
 ----------------------------------------------
-Most service providers will give you an email address  
-that relays messages to your phone via SMS. An alternative would  
+Most service providers will give you an email address that  
+relays messages to your phone via SMS. An alternative would  
 be to register an account with http://smsgateway.ca/
 
 Create the following file.
