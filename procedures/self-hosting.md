@@ -225,7 +225,8 @@ Run the following command.
 
     $ sudo chmod u+x /usr/local/bin/notify-login
 
-Edit the following file.
+Edit the following file.  
+This is for valid username and passwords.
 
     /etc/pam.d/common-auth
 
@@ -234,7 +235,8 @@ Apply the following changes.
          auth  required  pam_permit.so
     ++++ auth  optional  pam_exec.so /usr/local/bin/notify-login
 
-Edit the following file.
+Edit the following file.  
+This is for SSH sessions opened using keys.
 
     /etc/pam.d/sshd
 
