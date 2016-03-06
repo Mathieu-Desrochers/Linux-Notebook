@@ -234,6 +234,15 @@ Apply the following changes.
          auth  required  pam_permit.so
     ++++ auth  optional  pam_exec.so /usr/local/bin/notify-login
 
+Edit the following file.
+
+    /etc/pam.d/sshd
+
+Apply the following changes.
+
+         @include common-session
+    ++++ session  optional  pam_exec.so /usr/local/bin/notify-login
+
 Run the following commands.
 
     $ sudo chmod 700 /usr/local/bin/notify-login
