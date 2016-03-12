@@ -6,14 +6,12 @@ You will need the following.
     - 1 Static IP address (ask your ISP)
     - 2 drops of dedication
 
-Downloading the raspbian image
-------------------------------
+Imaging the micro SD card
+-------------------------
 Get the latest raspbian lite image from the following site.
 
     https://www.raspberrypi.org/downloads/
 
-Imaging the micro SD card
--------------------------
 Connect the card to your computer.  
 Run the following command to locate its device name.
 
