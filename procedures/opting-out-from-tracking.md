@@ -42,5 +42,5 @@ With the following content.
 
 Run the following commands.
 
-    chmod 400 /home/your-name/.vpn
+    chmod 600 /home/your-name/.vpn
     sudo shutdown --reboot now
