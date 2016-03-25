@@ -5,42 +5,34 @@ This service has to be paid for.
 
     https://nordvpn.com/
 
-Run the following commands.
+Download the following files from their website.
 
-    cd /etc/openvpn
-    sudo wget https://nordvpn.com/api/files/zip
-    sudo unzip zip
-    sudo rename 's/ovpn/conf/' *.ovpn
-    sudo rm zip
+- *.ovpn
+- *.crt
+- *.key
 
-Edit the following file.
+Place them in the following folder.
 
-    /etc/default/openvpn
+    ~/.vpn
 
-Apply the following change.
+From the Network Connections interface,  
+perform the following actions.
 
-    ---- #AUTOSTART="all"
-    ++++ AUTOSTART="ca17.nordvpn.com.tcp443"
+- Add
 
-Edit the following file.
+- Choose a Connection Type: Import a saved VPN configuration...
+- Select a file to import: ~/.vpn/ca12.nordvpn.com.tcp443.ovpn
+- Connection name: NordVPN 12
+- User name: your-username
+- Password: your-password
+- CA Certificate: ~/.vpn/ca12_nordvpn_com_ca.crt
 
-    /etc/openvpn/ca17.nordvpn.com.tcp443.conf
+- Advanced...
 
-Apply the following change.
+- TLS Authentication
+- Use additional TLS authentication: Checked
+- Key File: ~/.vpn/ca12_nordvpn_com_tls.key
+- Key Direction: 1
 
-    ---- auth-user-pass
-    ++++ auth-user-pass /home/mathieu/.vpn
-
-Create the following file.
-
-    /home/your-name/.vpn
-
-With the following content.
-
-    nordvpn-username
-    nordvpn-password
-
-Run the following commands.
-
-    chmod 600 /home/your-name/.vpn
-    sudo shutdown --reboot now
+Your might want to repeat these steps  
+to register other available VPN servers.
