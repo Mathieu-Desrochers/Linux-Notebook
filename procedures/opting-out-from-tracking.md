@@ -1,5 +1,5 @@
-Masking your IP address
------------------------
+Do not give them your IP address
+--------------------------------
 Open an account with NordVPN.  
 This service has to be paid for.
 
@@ -36,3 +36,13 @@ perform the following actions.
 
 Your might want to repeat these steps  
 to register other available VPN servers.
+
+Simply refuse to talk to them
+-----------------------------
+Download the hosts file from the following website.
+
+    https://github.com/StevenBlack/hosts
+
+Put its content in the following file.
+
+    /etc/hosts
