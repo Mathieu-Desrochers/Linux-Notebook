@@ -27,7 +27,8 @@ With the following content.
 Create the start-vpn-client.sh file with the following content.
 
     #! /bin/bash
-    /usr/sbin/openvpn --config /etc/openvpn/your.ovpn --daemon
+    /usr/sbin/openvpn --config /etc/openvpn/your.ovpn
+      --daemon --writepid /var/run/openvpn.pid
 
 Simply refuse to talk to them
 -----------------------------
