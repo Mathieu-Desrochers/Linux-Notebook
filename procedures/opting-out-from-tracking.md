@@ -5,34 +5,29 @@ This service has to be paid for.
 
     https://nordvpn.com/
 
-Download the following files from their website.
+Download the .ovpn file of your choice from their website.  
+Place it in the following folder.
 
-- *.ovpn
-- *.crt
-- *.key
+    /etc/openvpn
 
-Place them in the following folder.
+Apply the following change to the .ovpn file.
 
-    ~/.vpn
+    ---- auth-user-pass
+    ++++ auth-user-pass /home/your-name/.vpn
 
-From the Network Connections interface,  
-perform the following actions.
+Create the following file.
 
-- Add
-- Choose a Connection Type: Import a saved VPN configuration...
-- Select a file to import: ~/.vpn/ca12.nordvpn.com.tcp443.ovpn
-- Connection name: NordVPN 12
-- User name: your-username
-- Password: your-password
-- CA Certificate: ~/.vpn/ca12_nordvpn_com_ca.crt
-- Advanced...
-- TLS Authentication
-- Use additional TLS authentication: Checked
-- Key File: ~/.vpn/ca12_nordvpn_com_tls.key
-- Key Direction: 1
+    /home/your-name/.vpn
 
-Your might want to repeat these steps  
-to register other available VPN servers.
+With the following content.
+
+    nordvpn-username
+    nordvpn-password
+
+Create the start-vpn-client.sh file with the following content.
+
+    #! /bin/bash
+    /usr/sbin/openvpn --config /etc/openvpn/your.ovpn --daemon
 
 Simply refuse to talk to them
 -----------------------------
