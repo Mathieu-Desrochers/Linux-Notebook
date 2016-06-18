@@ -3,7 +3,8 @@ Requirements
 You will need the following.
 
     - 1 Raspberry PI
-    - 1 Static IP address (ask your ISP)
+    - 1 SD card
+    - 1 static IP address (ask your ISP)
     - 2 drops of dedication
 
 Imaging the micro SD card
@@ -12,7 +13,7 @@ Get the latest raspbian lite image from the following site.
 
     https://www.raspberrypi.org/downloads/
 
-Connect the card to your computer.  
+Connect the SD card to your computer.  
 Run the following command to locate its device name.
 
     $ df -h
@@ -29,11 +30,11 @@ Run the following commands.
     $ sudo dd bs=4M if=2015-11-21-raspbian-jessie-lite.img of=/dev/sdX
     $ sync
 
-Insert the card into the pi and connect its network cable.  
+Insert the SD card into the pi and connect its network cable.  
 Time for a first boot.
 
-Figuring out the pi's IP address
---------------------------------
+Figuring out the pi's address
+-----------------------------
 Run the following command from your laptop.
 
     $ ip addr
@@ -162,91 +163,18 @@ Run the following commands.
 
     $ sudo ufw default allow outgoing
     $ sudo ufw default deny incoming
-    $ sudo ufw allow 22/tcp
+    $ sudo ufw limit 22/tcp
     $ sudo ufw enable
 
-Setting up an abuse throttler
+Preventing brute force logins
 -----------------------------
-Run the following command.
-
-    $ sudo apt-get install fail2ban
-    $ sudo cp /etc/fail2ban/jail.conf /etc/fail2ban/jail.local
-
 Edit the following file.
-
-    /etc/fail2ban/jail.local
-
-Replace its content with the following lines.
-
-    [DEFAULT]
-    bantime  = 600  ; 10 minutes
-    findtime = 600  ; 10 minutes
-    maxretry = 3
-
-    [ssh]
-    enabled  = true
-    port     = ssh
-    filter   = sshd
-    logpath  = /var/log/auth.log
-
-    [recidive]
-    enabled  = true
-    filter   = recidive
-    logpath  = /var/log/fail2ban.log
-    action   = iptables-allports[name=recidive]
-    bantime  = 604800  ; 1 week
-    findtime = 86400   ; 1 day
-
-Run the following command.
-
-    $ sudo fail2ban-client reload
-
-Sending SMS notifications on successful logins
-----------------------------------------------
-Most service providers will give you an email address that  
-relays messages to your phone via SMS. An alternative would  
-be to register an account with http://smsgateway.ca/
-
-Create the following file.
-
-    /usr/local/bin/notify-login
-
-With the following content.
-
-    #!/bin/sh
-    curl "http://smsgateway.ca/sendsms.aspx?
-      CellNumber=your-number&
-      MessageBody=Login+on+tombstone%3A+$PAM_USER+on+`date +%Y%m%d%H%M%S`&
-      AccountKey=your-key"
-
-Run the following command.
-
-    $ sudo chmod u+x /usr/local/bin/notify-login
-
-Edit the following file.  
-This is for valid username and passwords.
 
     /etc/pam.d/common-auth
 
-Apply the following changes.
+Add the following line at the beginning of the file.
 
-         auth  required  pam_permit.so
-    ++++ auth  optional  pam_exec.so /usr/local/bin/notify-login
-
-Edit the following file.  
-This is for SSH sessions opened using keys.
-
-    /etc/pam.d/sshd
-
-Apply the following changes.
-
-         @include common-session
-    ++++ session  optional  pam_exec.so /usr/local/bin/notify-login
-
-Run the following commands.
-
-    $ sudo chmod 700 /usr/local/bin/notify-login
-    $ sudo shutdown --reboot now
+    ++++ auth  required  pam_tally2.so file=/var/log/tallylog deny=3 even_deny_root unlock_time=300
 
 Generating a self signed SSL certificate
 ----------------------------------------
@@ -313,23 +241,10 @@ Define the following aliases.
 
 Run the following commands.
 
-    $ sudo ufw allow 25/tcp
-
-Edit the following file.
-
-    /etc/fail2ban/jail.local
-
-Add the following lines.
-
-    [postfix]
-    enabled  = true
-    port     = smtp,ssmtp,submission
-    filter   = postfix
-    logpath  = /var/log/mail.log
+    $ sudo ufw limit 25/tcp
 
 Run the following command.
 
-    $ sudo fail2ban-client reload
     $ sudo newaliases
     $ sudo postfix start
 
@@ -401,30 +316,11 @@ Apply the following changes.
 
 Run the following commands.
 
-    $ sudo ufw allow 587/tcp
-    $ sudo ufw allow 993/tcp
-
-Edit the following file.
-
-    /etc/fail2ban/jail.local
-
-Add the following lines.
-
-    [sasl]
-    enabled  = true
-    port     = smtp,ssmtp,submission,imap2,imap3,imaps,pop3,pop3s
-    filter   = postfix-sasl
-    logpath  = /var/log/mail.log
-
-    [dovecot]
-    enabled = true
-    port    = smtp,ssmtp,submission,imap2,imap3,imaps,pop3,pop3s
-    filter  = dovecot
-    logpath = /var/log/mail.log
+    $ sudo ufw limit 587/tcp
+    $ sudo ufw limit 993/tcp
 
 Run the following commands.
 
-    $ sudo fail2ban-client reload
     $ sudo postfix reload
     $ sudo service dovecot restart
 
@@ -464,45 +360,3 @@ Run the following commands on the server.
 Run the following command from your laptop.
 
     $ git clone your-name@your-domain.com:/home/your-name/some-project
-
-Local fail2ban rules
---------------------
-The tool ships with pretty good filters, but some unmatched  
-log entries were detected during manual scans.
-
-Create the following file.
-
-    /etc/fail2ban/filters.d/sshd-local.conf
-
-With the following content.
-
-    [INCLUDES]
-    before = common.conf
-
-    [Definition]
-    _daemon = sshd
-    failregex = Invalid user .* from <HOST>
-                User .* from <HOST> not allowed because not listed in AllowUsers
-                Received disconnect from <HOST>: 11:  \[preauth\]
-                Received disconnect from <HOST>: 11: Bye Bye \[preauth\]
-                Received disconnect from <HOST>: 3: .*: Auth fail \[preauth\]
-                Did not receive identification string from <HOST>
-                Connection closed by <HOST> \[preauth\]
-                Address <HOST> maps to .*, but this does not map back to the address - POSSIBLE BREAK-IN ATTEMPT!
-    ignoreregex =
-
-Edit the following file.
-
-    /etc/fail2ban/jail.local
-
-Apply the following changes.
-
-    ++++ [ssh-local]
-    ++++ enabled  = true
-    ++++ port     = ssh
-    ++++ filter   = sshd-local
-    ++++ logpath  = /var/log/auth.log
-
-Run the following command.
-
-    $ sudo fail2ban-client reload
