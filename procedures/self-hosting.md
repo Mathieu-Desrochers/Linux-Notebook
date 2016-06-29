@@ -176,6 +176,14 @@ Add the following line at the beginning of the file.
 
     ++++ auth  required  pam_tally2.so file=/var/log/tallylog deny=3 even_deny_root unlock_time=300
 
+Edit the following file.
+
+    /etc/pam.d/common-account
+
+Add the following line at the beginning of the file.
+
+    ++++ account  required  pam_tally2.so
+
 Generating a self signed SSL certificate
 ----------------------------------------
 Run the following commands.
@@ -260,15 +268,21 @@ Edit the following file.
 
 Replace its content with the following lines.
 
-    protocols = imaps
+    protocols = imap
+
+    service imap-login {
+      inet_listener imap {
+        port = 0
+      }
+    }
 
     userdb {
       driver = passwd
     }
 
     passdb {
-      args = %s
       driver = pam
+      args = dovecot
     }
 
     ssl = required
