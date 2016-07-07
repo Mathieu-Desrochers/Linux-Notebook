@@ -40,7 +40,7 @@ Run the following command.
       400653:       c3                      ret
     ...
 
-This is only memory containing data, some of which represent instructions.  
+This is only memory containing data, some of which may represent instructions.  
 Add a processor to read/write that memory and execute these instructions,  
 and there is your computer.
 
@@ -75,7 +75,7 @@ Run the following commands.
        0x0000000000400653 <+43>:    ret
     End of assembler dump.
 
-Instructions take the following form:
+Note that instructions take the following form:
 
     operation <destination>, <source>
 
