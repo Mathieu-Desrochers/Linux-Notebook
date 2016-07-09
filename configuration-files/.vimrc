@@ -16,4 +16,5 @@ nnoremap <CR> :noh<CR><CR>
 
 set tags=./tags;
 
+set noswapfile
 set nobackup
