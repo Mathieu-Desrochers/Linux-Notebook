@@ -184,6 +184,44 @@ Add the following line at the beginning of the file.
 
     ++++ account  required  pam_tally2.so
 
+Run the following command.
+
+    $ sudo /etc/init.d/ssh restart
+
+Blacklisting script kiddies from china
+--------------------------------------
+Run the following command.
+
+    sudo apt-get install libpam-geoip
+
+Edit the following file.
+
+    /etc/security/geoip.conf
+
+Set the following configuration.
+
+    #<domain>       <service>       <action>        <location>
+    *               sshd            allow           CA, *
+    *               sshd            allow           UNKNOWN
+    *               sshd            deny            *
+    *               *               allow           *
+
+Download the GeoIP database from the following site.
+
+    http://geolite.maxmind.com/download/geoip/database/GeoLiteCity.dat.gz
+
+Edit the following file.
+
+    /etc/pam.d/common-account
+
+Add the following line at the beginning of the file.
+
+    ++++ account  required  pam_geoip.so  geoip_db=/etc/security/geoip.dat
+
+Run the following command.
+
+    $ sudo /etc/init.d/ssh restart
+
 Generating a self signed SSL certificate
 ----------------------------------------
 Run the following commands.
