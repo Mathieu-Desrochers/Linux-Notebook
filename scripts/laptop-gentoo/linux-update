@@ -1,0 +1,26 @@
+#!/bin/bash
+# Probably better be done by hand
+
+cd /usr/src/linux
+make menuconfig
+
+# Processor type and features
+#   Processor family
+#     (X) Core 2/Newer Xeon
+# Device drivers
+#   Network device support
+#     Ethernet driver support
+#       [*] Realtek devices
+#         <M> Realtek 8169 gigabit ethernet support
+#     Wireless LAN
+#       <M> Atheros Wireless Cards
+#         <M> Atheros 802.11n wireless cards support
+#           [*] Atheros ath9k PCI/PCIe bus support
+# Cryptographic API
+#   <*> AES cipher algorithms (x86_64)
+
+make -j5 && make install_modules
+mount /dev/sda2
+make install
+grub-mkconfig -o /boot/grub/grub.cfg
+shutdown -r now
