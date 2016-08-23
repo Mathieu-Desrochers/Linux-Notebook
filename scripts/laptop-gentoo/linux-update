@@ -7,6 +7,16 @@ make menuconfig
 # Processor type and features
 #   Processor family
 #     (X) Core 2/Newer Xeon
+# Networking support
+#   Networking options
+#     Network packet filtering network (Netfilter)
+#       [*] Advanced netfilter configuration
+#       Core Netfilter Configuration
+#         <*> "comment" match support
+#         <*> "hl" hoplimit/TTL target support
+#         <*> "limit" match support
+#         <*> "multiport" Multiple port match support
+#         <*> "recent" match support
 # Device drivers
 #   Network device support
 #     Ethernet driver support
