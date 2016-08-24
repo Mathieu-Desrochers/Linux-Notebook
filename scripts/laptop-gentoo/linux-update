@@ -4,13 +4,10 @@
 #   Processor family
 #     (X) Core 2/Newer Xeon
 #
-# Networking support
-#   Networking options
-#     TCP/IP Networking
-#       <*> IP: IPsec transport mode
-#       <*> IP: IPsec tunnel mode
-#
 # Device drivers
+#   Multiple devices driver support (RAID and LVM)
+#     Device mapper support
+#       <*> Crypt target support
 #   Network device support
 #     Ethernet driver support
 #       [*] Realtek devices
@@ -21,6 +18,7 @@
 #           [*] Atheros ath9k PCI/PCIe bus support
 #
 # Cryptographic API
+#   <*> XTS support
 #   <*> AES cipher algorithms (x86_64)
 
 cd /usr/src/linux
