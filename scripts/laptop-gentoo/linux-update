@@ -1,22 +1,15 @@
 #!/bin/bash
-# Probably better be done by hand
-
-cd /usr/src/linux
-make menuconfig
 
 # Processor type and features
 #   Processor family
 #     (X) Core 2/Newer Xeon
+#
 # Networking support
 #   Networking options
-#     Network packet filtering network (Netfilter)
-#       [*] Advanced netfilter configuration
-#       Core Netfilter Configuration
-#         <*> "comment" match support
-#         <*> "hl" hoplimit/TTL target support
-#         <*> "limit" match support
-#         <*> "multiport" Multiple port match support
-#         <*> "recent" match support
+#     TCP/IP Networking
+#       <*> IP: IPsec transport mode
+#       <*> IP: IPsec tunnel mode
+#
 # Device drivers
 #   Network device support
 #     Ethernet driver support
@@ -26,9 +19,12 @@ make menuconfig
 #       <M> Atheros Wireless Cards
 #         <M> Atheros 802.11n wireless cards support
 #           [*] Atheros ath9k PCI/PCIe bus support
+#
 # Cryptographic API
 #   <*> AES cipher algorithms (x86_64)
 
+cd /usr/src/linux
+make menuconfig
 make -j5 && make install_modules
 mount /dev/sda2
 make install
