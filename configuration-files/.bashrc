@@ -1,4 +1,4 @@
-set -o vi
+~/scripts/shell-colors
 
 P_GREEN="\[$(tput setaf 2)\]"
 P_RESET="\[$(tput sgr0)\]"
