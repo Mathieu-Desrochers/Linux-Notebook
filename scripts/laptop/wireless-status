@@ -1,0 +1,2 @@
+#!/bin/bash
+if [ ! -z "`ifconfig | grep 'inet 192'`" ]; then echo 'W: Up'; else echo 'W: Down'; fi

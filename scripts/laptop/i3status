@@ -1,0 +1,6 @@
+#!/bin/bash
+i3status | while :
+do
+  read line
+  echo "`~/scripts/wireless-status` | $line" || exit 1
+done

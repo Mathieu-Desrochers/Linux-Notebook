@@ -232,6 +232,8 @@ Select the following options.
         Device mapper support
           <*> Crypt target support
       Network device support
+        Network core driver support
+          <*> Universal TUN/TAP device driver support
         Ethernet driver support
           [*] Realtek devices
             <M> Realtek 8169 gigabit ethernet support

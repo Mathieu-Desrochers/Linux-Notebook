@@ -6,11 +6,11 @@ This service has to be paid for.
     https://nordvpn.com/
 
 Download the .ovpn file of your choice from their website.  
-Place it in the following folder.
+Copy it in the following location.
 
-    /etc/openvpn
+    /etc/openvpn/openvpn.conf
 
-Apply the following change to the .ovpn file.
+Apply the following change to the file.
 
     ---- auth-user-pass
     ++++ auth-user-pass /home/your-name/.vpn
@@ -23,12 +23,6 @@ With the following content.
 
     nordvpn-username
     nordvpn-password
-
-Create the start-vpn-client.sh file with the following content.
-
-    #! /bin/bash
-    /usr/sbin/openvpn --config /etc/openvpn/your.ovpn
-      --writepid /var/run/openvpn.pid
 
 Simply refuse to talk to them
 -----------------------------
