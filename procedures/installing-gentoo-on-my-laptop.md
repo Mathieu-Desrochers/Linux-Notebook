@@ -59,7 +59,8 @@ Downloading the stage3 archive
 Run the following commands.
 
     $ cd /mnt/gentoo
-    $ links http://mirror.csclub.uwaterloo.ca/gentoo-distfiles/current-stage3-amd64/
+    $ links http://mirror.csclub.uwaterloo.ca/gentoo-distfiles/
+      releases/amd64/autobuilds/current-stage3-amd64/
 
 Select the following file and press D.
 
@@ -67,7 +68,7 @@ Select the following file and press D.
 
 Run the following command.
 
-    $ tar -xjpf stage3-amd64-*.tar.bz2
+    $ tar -xjpf stage3-amd64-*.tar.bz2 --xattrs
 
 Selecting the packages mirror
 -----------------------------
@@ -163,11 +164,11 @@ Setting up system logging
 -------------------------
 Run the following commands.
 
-    $ emerge --ask app-admin/sysklog
+    $ emerge --ask app-admin/sysklogd
     $ emerge --ask app-admin/logrotate
     $ emerge --ask app-admin/dcron
 
-    $ rc-update add sysklog default
+    $ rc-update add sysklogd default
     $ rc-update add dcron default
 
 Setting up the network
