@@ -113,7 +113,7 @@ Configuring SSH
 Run the following command from your laptop.  
 Do so from a folder containing your public key.
 
-    $ rcp id_rsa.pub your-name@192.168.1.102:id_rsa.pub
+    $ scp id_rsa.pub your-name@192.168.1.102:id_rsa.pub
 
 Run the following commands on the server.
 
