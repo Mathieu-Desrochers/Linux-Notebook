@@ -4,6 +4,7 @@ Run the following commands.
 
     $ emerge --ask net-firewall/iptables
     $ rc-service iptables save
+    $ rc-update add iptables default
 
 Run the following commands.  
 Where 162.219.176.19 is the address of your VPN.  

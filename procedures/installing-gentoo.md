@@ -276,6 +276,3 @@ Set the following options.
 Run the following command.
 
     $ sudo /etc/init.d/ssh restart
-
-Configuring a web server
-------------------------
