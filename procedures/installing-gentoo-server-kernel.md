@@ -1,13 +1,18 @@
-Building the kernel
--------------------
-Add the following options.
+Kernel options for a server
+---------------------------
+Select the following options.
 
     Processor type and features
       [*] Linux guest support
+          Processor family
+            (X) Core 2/Newer Xeon
 
     Device drivers
       Block devices
         <*> Virtio block driver
+      Multiple devices driver support (RAID and LVM)
+        Device mapper support
+          <*> Crypt target support
       SCSI device suppoer
         SCSI low-lever drivers
           <*> virtio-scsi support
@@ -20,29 +25,9 @@ Add the following options.
         <*> Virtio balloon driver
         <*> Platform bus driver for memory mapped virtio devices
 
+    Cryptographic API
+      <*> XTS support
+      <*> AES cipher algorithms (x86_64)
+
     Virtualization
       [*] Host kernel accelerator for virtuo net
-
-Building the initramfs
-----------------------
-Add the following switch to this command.
-
-    $ genkernel --virtio initramfs
-
-Configuring SSH
----------------
-Edit the following file.
-
-    /etc/ssh/sshd_config
-
-Set the following options.
-
-    PermitRootLogin no
-    AuthorizedKeysFile .ssh/authorized_keys
-    PasswordAuthentication no
-    UsePAM no
-    AllowUsers my-account
-
-Run the following command.
-
-    $ sudo /etc/init.d/ssh restart
