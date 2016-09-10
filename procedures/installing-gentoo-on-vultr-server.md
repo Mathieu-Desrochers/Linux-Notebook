@@ -1,6 +1,6 @@
 Building the kernel
 -------------------
-Select the following options.
+Add the following options.
 
     Processor type and features
       [*] Linux guest support
@@ -25,7 +25,7 @@ Select the following options.
 
 Building the initramfs
 ----------------------
-Run the following command.
+Add the following switch to this command.
 
     $ genkernel --virtio initramfs
 
@@ -35,7 +35,7 @@ Edit the following file.
 
     /etc/ssh/sshd_config
 
-Set the following settings.
+Set the following options.
 
     PermitRootLogin no
     AuthorizedKeysFile .ssh/authorized_keys
