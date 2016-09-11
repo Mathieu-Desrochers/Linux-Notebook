@@ -243,15 +243,6 @@ Run the following command.
 
     $ grub-mkconfig -o /boot/grub/grub.cfg
 
-Final steps
------------
-Run the following commands.
-
-    $ rm stage3-amd64-*.tar.bz2
-    $ passwd
-
-Reboot and pray.
-
 Setting up a firewall
 ---------------------
 See one of the following procedures.
@@ -261,6 +252,10 @@ See one of the following procedures.
 
 Configuring SSH
 ---------------
+Run the following command.
+
+    $ emerge --ask net-misc/openssh
+
 Edit the following file.
 
     /etc/ssh/sshd_config
@@ -271,8 +266,21 @@ Set the following options.
     AuthorizedKeysFile .ssh/authorized_keys
     PasswordAuthentication no
     UsePAM no
-    AllowUsers my-account
+    AllowUsers your-account
+
+Copy your public RSA key to this folder.
+
+    /home/your-account/.ssh/authorized_keys
 
 Run the following command.
 
-    $ sudo /etc/init.d/ssh restart
+    $ rc-update add sshd default
+
+Final steps
+-----------
+Run the following commands.
+
+    $ rm stage3-amd64-*.tar.bz2
+    $ passwd
+
+Reboot and pray.
