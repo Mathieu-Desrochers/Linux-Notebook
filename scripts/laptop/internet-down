@@ -1,0 +1,5 @@
+#!/bin/bash
+pkill openvpn
+pkill dhcpcd
+pkill wpa_supplicant
+rfkill block wlan

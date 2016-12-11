@@ -15,6 +15,8 @@ Apply the following change to the file.
     ---- auth-user-pass
     ++++ auth-user-pass /home/your-name/.vpn
 
+    ++++ daemon
+
 Create the following file.
 
     /home/your-name/.vpn
