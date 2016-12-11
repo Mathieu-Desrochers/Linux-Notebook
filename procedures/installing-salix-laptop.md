@@ -7,7 +7,7 @@ Change the following settings.
 - Launch CMS: Enabled
 - Boot option #1: [P0: SanDisk]
 
-Use the boot override for the DVD.
+Use the boot override feature and select the DVD.
 
 Salix installation
 ------------------
@@ -94,14 +94,50 @@ Run the following command.
 
 Joining a wireless network
 --------------------------
-Plugin a network cable.  
-Run the following commands.
+Plugin a network cable.
 
     $ dhcdcp
+
+Run the following commands.
+
     $ spi -u
     $ spi -U
+    $ spi -i rfkill
     $ spi -i wpa_supplicant
 
 Edit the following file.
 
-    /etc/wpa_supplicant.
+    /etc/wpa_supplicant.conf
+
+Add the following lines.
+
+    network={
+      ssid="super-network-name"
+      psk="super-password"
+    }
+
+Run following commands to connect to the wireless network.
+
+    $ ifconfig eth0 down
+
+    $ rfkill unblock wan
+    $ wpa_supplicant -Dnl80211 -iwlan0 -c /etc/wpa_supplicant.conf -B
+    $ dhcpcd
+
+Installing i3
+-------------
+Run the following commands.
+
+    $ slapt-get --install-set x
+    $ spi -i i3
+    $ spi -i i3status
+    $ cp /etc/X11/xinit/xinitrc.i3 ~/.xinitrc
+
+Glitches that require manual intervention.
+
+- Comment out the line about /usr/man in i3.Slackbuild
+- Make the script executable and run it by hand
+- Install the package using installpkg
+
+- Edit the i3 configuration file
+- Comment out the content of the bar block
