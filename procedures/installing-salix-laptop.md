@@ -88,12 +88,12 @@ Modify the following setting.
       label = linux
       read-only
 
-Run the following command.
+Run the following command then reboot.
 
     $ lilo
 
-Joining a wireless network
---------------------------
+Wireless networking
+-------------------
 Plugin a network cable.
 
     $ dhcdcp
@@ -112,8 +112,8 @@ Edit the following file.
 Add the following lines.
 
     network={
-      ssid="super-network-name"
-      psk="super-password"
+      ssid="network-name"
+      psk="password"
     }
 
 Run following commands to connect to the wireless network.
@@ -124,6 +124,60 @@ Run following commands to connect to the wireless network.
     $ wpa_supplicant -Dnl80211 -iwlan0 -c /etc/wpa_supplicant.conf -B
     $ dhcpcd
 
+Configuring the firewall
+------------------------
+Run the following commands.  
+Where 184.75.221.106 is the address of your VPN.  
+All traffic will be forced through there.
+
+    $ iptables -F
+    $ iptables -X
+    $ iptables -Z
+
+    $ iptables -P INPUT DROP
+    $ iptables -P FORWARD DROP
+    $ iptables -P OUTPUT DROP
+
+    $ iptables -A INPUT -s 184.75.221.106 -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+    $ iptables -A INPUT -p udp --sport 53 -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+    $ iptables -A INPUT -i tun0 -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+    $ iptables -A INPUT -i lo -j ACCEPT
+
+    $ iptables -A OUTPUT -d 184.75.221.106 -j ACCEPT
+    $ iptables -A OUTPUT -p udp --dport 53 -j ACCEPT
+    $ iptables -A OUTPUT -o tun0 -j ACCEPT
+    $ iptables -A OUTPUT -o lo -j ACCEPT
+
+    $ ip6tables -F
+    $ ip6tables -X
+    $ ip6tables -Z
+
+    $ ip6tables -P INPUT DROP
+    $ ip6tables -P FORWARD DROP
+    $ ip6tables -P OUTPUT DROP
+
+Run the following commands.
+
+    $ mkdir /etc/sysconfig
+    $ iptables-save > /etc/sysconfig/iptables
+
+Create the following file.
+
+    /etc/rc.d/rc.firewall
+
+With the following content.
+
+    #!/bin/bash
+    if [ "$1" = "start" ]
+    then
+      echo "Applying firewall configuration"
+      /usr/sbin/iptables-restore < /etc/sysconfig/iptables
+    fi
+
+Run the following command.
+
+    $ chmod +x /etc/rc.d/rc.firewall
+
 Installing i3
 -------------
 Run the following commands.
@@ -133,10 +187,10 @@ Run the following commands.
     $ spi -i i3status
     $ cp /etc/X11/xinit/xinitrc.i3 ~/.xinitrc
 
-Glitches that require manual intervention.
+The following known problems require manual intervention.
 
 - Comment out the line about /usr/man in i3.Slackbuild
-- Make the script executable and run it by hand
+- Make the script executable then run it by hand
 - Install the package using installpkg
 
 - Edit the i3 configuration file
