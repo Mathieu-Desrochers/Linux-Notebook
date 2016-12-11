@@ -184,6 +184,5 @@ The following known problems require manual intervention.
 - Comment out the line about /usr/man in i3.Slackbuild
 - Make the script executable then run it by hand
 - Install the package using installpkg
-
 - Edit the i3 configuration file
 - Comment out the content of the bar block
