@@ -1,5 +1,4 @@
 #!/bin/bash
-rfkill unblock wlan
 wpa_supplicant -Dnl80211 -iwlan0 -c /etc/wpa_supplicant.conf -B
 dhcpcd
 /usr/sbin/openvpn /etc/openvpn/openvpn.conf
