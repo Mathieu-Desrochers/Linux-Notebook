@@ -1,6 +1,5 @@
 #!/bin/bash
-i3status | while :
+while sleep 1
 do
-  read line
-  echo "`~/scripts/wireless-status` | $line" || exit 1
+  echo "`uptime | cut -d ' ' -f 12 | cut -d ',' -f 1` | `date +%H:%M`"
 done
