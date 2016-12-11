@@ -1,5 +1,10 @@
 #!/bin/bash
-while sleep 1
+while sleep 5
 do
-  echo "`uptime | cut -d ' ' -f 12 | cut -d ',' -f 1` | `date +%H:%M`"
+  if [ "`ifconfig | grep tun0`" != "" ]
+  then
+    echo -n "VPN | "
+  fi
+  echo -n "`uptime | cut -d ' ' -f 12 | cut -d ',' -f 1` | "
+  echo "`date +%H:%M`"
 done
