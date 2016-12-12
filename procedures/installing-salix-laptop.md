@@ -1,6 +1,6 @@
 Configuring the BIOS
 --------------------
-Change the following settings.
+Apply the following settings.
 
 - Date and time: Now as UTC
 - Secure Boot Control: Disabled
@@ -80,7 +80,9 @@ Edit the following file.
 
     /etc/lilo.conf
 
-Modify the following setting.
+Modify the following settings.
+
+    append="quiet vt.default_utf8=1 video=640x480@60"
 
     image = /boot/vmlinuz
       initrd = /boot/initrd.gz
@@ -92,13 +94,12 @@ Run the following command then reboot.
 
     $ lilo
 
-Wireless networking
--------------------
-Plugin a network cable.
+Connecting to the wireless network
+----------------------------------
+Plugin a network cable.  
+Run the following commands.
 
     $ dhcdcp
-
-Run the following commands.
 
     $ spi -u
     $ spi -U
@@ -112,27 +113,25 @@ Edit the following file.
 Add the following lines.
 
     network={
-      ssid="network-name"
+      ssid="name"
       psk="password"
     }
 
-Run following commands to connect to the wireless network.
-
-    $ ifconfig eth0 down
+Disconnect the network cable and reboot.  
+Run following commands.
 
     $ rfkill unblock wan
     $ wpa_supplicant -Dnl80211 -iwlan0 -c /etc/wpa_supplicant.conf -B
     $ dhcpcd
 
-Configuring the firewall
-------------------------
+Forcing the network traffic through a VPN
+-----------------------------------------
 Create the following file.
 
     /etc/rc.d/rc.firewall
 
 With the following content.  
-Where 184.75.221.106 is the address of your VPN.  
-All traffic will be forced through there.
+Where 184.75.221.106 is the VPN address.
 
     #!/bin/bash
     if [ "$1" = "start" ]
@@ -170,19 +169,41 @@ Run the following command.
 
     $ chmod +x /etc/rc.d/rc.firewall
 
-Installing i3
--------------
+Installing the i3 windows manager
+---------------------------------
 Run the following commands.
 
     $ slapt-get --install-set x
     $ spi -i i3
     $ spi -i i3status
-    $ cp /etc/X11/xinit/xinitrc.i3 ~/.xinitrc
 
-The following known problems require manual intervention.
+The following manual interventions will be requied.
 
 - Comment out the line about /usr/man in i3.Slackbuild
 - Make the script executable then run it by hand
 - Install the package using installpkg
 - Edit the i3 configuration file
 - Comment out the content of the bar block
+
+Screen resolution
+-----------------
+Create the following file.
+
+    /etc/X11/xorg.conf
+
+With the following content.
+
+    Section "Monitor"
+      Identifier "eDP"
+      Option "PreferredMode" "1280x720"
+    EndSection
+
+    Section "Screen"
+      Identifier "Screen0"
+      Monitor "eDP"
+      DefaultDepth 24
+      SubSection "Display"
+        Depth 24
+        Modes "1280x720"
+      EndSubSection
+    EndSection
