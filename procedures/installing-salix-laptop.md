@@ -195,7 +195,6 @@ With the following content.
 
     Section "Monitor"
       Identifier "eDP"
-      Option "PreferredMode" "1280x720"
     EndSection
 
     Section "Screen"
