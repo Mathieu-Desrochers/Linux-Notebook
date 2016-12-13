@@ -1,2 +1,5 @@
+xterm*vt100*translations: #override \n\
+  Shift <Key> Delete: insert-selection(SELECT) \n
+
 xterm*faceName: Terminus
 xterm*faceSize: 13

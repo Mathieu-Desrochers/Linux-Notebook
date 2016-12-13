@@ -207,3 +207,15 @@ With the following content.
         Modes "1280x720"
       EndSubSection
     EndSection
+
+Key bindings
+------------
+Edit the following file.
+
+    /etc/inputrc
+
+Modify the following section.
+
+    # Set various nice escape sequences:
+    "\e[1;5C": forward-word
+    "\e[1;5D": backward-word
