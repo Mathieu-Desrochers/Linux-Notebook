@@ -1,2 +1,2 @@
 xrdb -merge ~/.Xresources
-exec i3
+exec i3 -c ~/.i3

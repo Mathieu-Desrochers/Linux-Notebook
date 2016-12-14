@@ -182,11 +182,9 @@ The following manual interventions will be requied.
 - Comment out the line about /usr/man in i3.Slackbuild
 - Make the script executable then run it by hand
 - Install the package using installpkg
-- Edit the i3 configuration file
-- Comment out the content of the bar block
 
-Screen resolution
------------------
+Configuring the screen resolution
+---------------------------------
 Create the following file.
 
     /etc/X11/xorg.conf
@@ -207,13 +205,13 @@ With the following content.
       EndSubSection
     EndSection
 
-Key bindings
-------------
+Configuring the keyboard
+------------------------
 Edit the following file.
 
     /etc/inputrc
 
-Modify the following section.
+Modify the following lines.
 
     # Set various nice escape sequences:
     "\e[1;5C": forward-word
