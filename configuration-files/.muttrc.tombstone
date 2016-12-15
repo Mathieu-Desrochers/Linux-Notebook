@@ -1,0 +1,13 @@
+set from = "*****@matheu-desrochers.com"
+set realname = "Mathieu Desrochers"
+
+set imap_user = "*****"
+set imap_pass = ""
+set folder = "imaps://mathieu-desrochers.com:993"
+
+set smtp_url = "smtp://*****@mathieu-desrochers.com:587/"
+set smtp_pass = ""
+
+set spoolfile = "+INBOX"
+set postponed = "+[Tombstone]/Drafts"
+set record = "+Sent"

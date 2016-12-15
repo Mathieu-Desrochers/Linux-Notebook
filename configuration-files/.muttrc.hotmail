@@ -1,0 +1,13 @@
+set from = "*****@hotmail.com"
+set realname = "Mathieu Desrochers"
+
+set imap_user = "*****@hotmail.com"
+set imap_pass = ""
+set folder = "imaps://imap-mail.outlook.com:993"
+
+set smtp_url = "smtp://*****@hotmail.com@smtp.live.com:587/"
+set smtp_pass = ""
+
+set spoolfile = "+INBOX"
+set postponed = "+[Hotmail]/Drafts"
+set record = "Sent"

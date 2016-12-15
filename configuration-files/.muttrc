@@ -1,0 +1,19 @@
+set ssl_force_tls = yes
+set imap_keepalive = 60
+
+set header_cache = "~/.mutt/cache/headers"
+set message_cachedir = "~/.mutt/cache/bodies"
+set certificate_file = "~/.mutt/certificates"
+
+set editor = vim
+
+set sort = reverse-date-received
+set move = no
+
+source ~/.muttrc.hotmail
+folder-hook "imaps://imap-mail.outlook.com:993" 'source ~/.muttrc.hotmail'
+macro index <f3> '<change-folder>imaps://imap-mail.outlook.com:993<enter>'
+
+source ~/.muttrc.tombstone
+folder-hook "imaps://mathieu-desrochers.com:993" 'source ~/.muttrc.tombstone'
+macro index <f2> '<change-folder>imaps://mathieu-desrochers.com:993<enter>'
