@@ -1,10 +1,17 @@
 #!/bin/bash
+
+function i3status_print() {
+  local VPN=""
+  if [ "`ifconfig | grep tun0`" != "" ]; then VPN="VPN |"; fi
+  local KEYBOARD="`setxkbmap -query | awk '/layout/{print$2}' | tr '[:lower:]' '[:upper:]'`"
+  local LOAD="`uptime | cut -d ' ' -f 12 | cut -d ',' -f 1`"
+  local TIME="`date +%H:%M`"
+  echo "$VPN $KEYBOARD | $LOAD | $TIME"
+}
+
+i3status_print
+
 while sleep 1
 do
-  if [ "`ifconfig | grep tun0`" != "" ]
-  then
-    echo "VPN | `uptime | cut -d ' ' -f 12 | cut -d ',' -f 1` | `date +%H:%M`"
-  else
-    echo "`uptime | cut -d ' ' -f 12 | cut -d ',' -f 1` | `date +%H:%M`"
-  fi
+  i3status_print
 done
