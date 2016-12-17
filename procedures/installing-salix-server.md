@@ -139,15 +139,12 @@ With the following content.
 
       iptables -P INPUT DROP
       iptables -P FORWARD DROP
-      iptables -P OUTPUT DROP
+      iptables -P OUTPUT ACCEPT
 
       iptables -A INPUT -p tcp --dport 22 -m state --state NEW -m recent --set
       iptables -A INPUT -p tcp --dport 22 -m state --state NEW -m recent --update --seconds 300 --hitcount 10 -j DROP
       iptables -A INPUT -p tcp --dport 22 -j ACCEPT
       iptables -A INPUT -p tcp --dport 443 -j ACCEPT
-
-      iptables -A OUTPUT -p tcp --sport 22 -j ACCEPT
-      iptables -A OUTPUT -p tcp --sport 443 -j ACCEPT
 
       ip6tables -F
       ip6tables -X
