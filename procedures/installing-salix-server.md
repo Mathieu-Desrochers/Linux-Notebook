@@ -141,6 +141,7 @@ With the following content.
       iptables -P FORWARD DROP
       iptables -P OUTPUT ACCEPT
 
+      iptables -A INPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
       iptables -A INPUT -p tcp --dport 22 -m state --state NEW -m recent --set
       iptables -A INPUT -p tcp --dport 22 -m state --state NEW -m recent --update --seconds 300 --hitcount 10 -j DROP
       iptables -A INPUT -p tcp --dport 22 -j ACCEPT
