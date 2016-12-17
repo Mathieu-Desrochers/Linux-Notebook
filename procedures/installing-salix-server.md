@@ -32,7 +32,7 @@ Pay attention to the following options.
 - Select other Linux partitions: /dev/sda1 at /boot
 - Select installation mode: Core
 - Install LILO: simple standard MBR
-- Network: laptop laptop NetworkManager
+- Network: laptop laptop DHCP
 - Exit to command line
 
 Configuring the file systems
@@ -43,8 +43,8 @@ Edit the following file.
 
 Add the following lines.
 
-    lukssda2    /dev/sda2
-    lukssda3    /dev/sda3    none    swap
+    luksvda2    /dev/vda2
+    luksvda3    /dev/vda3    none    swap
 
 Edit the following file.
 
@@ -52,7 +52,7 @@ Edit the following file.
 
 Adjust the following line.
 
-    /dev/mapper/lukssda3   swap   swap   defaults   0   0
+    /dev/mapper/luksvda3   swap   swap   defaults   0   0
 
 Configuring the boot loader
 ---------------------------
@@ -62,7 +62,7 @@ Run the following commands.
     $ mount -o bind /sys /mnt/sys
     $ chroot /mnt
 
-    $ mkinitrd -c -k 4.4.19 -f ext4 -r vda2 -C /dev/sda2 -L
+    $ mkinitrd -c -k 4.4.19 -f ext4 -r vda2 -C /dev/vda2 -L
 
 Edit the following file.
 
@@ -119,3 +119,45 @@ Run the following commands.
 
     $ chmod +x /etc/rc.d/rc.sshd
     $ /etc/rc.d/rc.sshd start
+
+Configuring the firewall
+------------------------
+Create the following file.
+
+    /etc/rc.d/rc.firewall
+
+With the following content.
+
+    #!/bin/bash
+    if [ "$1" = "start" ]
+    then
+      echo "Applying firewall configuration"
+
+      iptables -F
+      iptables -X
+      iptables -Z
+
+      iptables -P INPUT DROP
+      iptables -P FORWARD DROP
+      iptables -P OUTPUT DROP
+
+      iptables -A INPUT -p tcp --dport 22 -m state --state NEW -m recent --set
+      iptables -A INPUT -p tcp --dport 22 -m state --state NEW -m recent --update --seconds 300 --hitcount 10 -j DROP
+      iptables -A INPUT -p tcp --dport 22 -j ACCEPT
+      iptables -A INPUT -p tcp --dport 443 -j ACCEPT
+
+      iptables -A OUTPUT -p tcp --sport 22 -j ACCEPT
+      iptables -A OUTPUT -p tcp --sport 443 -j ACCEPT
+
+      ip6tables -F
+      ip6tables -X
+      ip6tables -Z
+
+      ip6tables -P INPUT DROP
+      ip6tables -P FORWARD DROP
+      ip6tables -P OUTPUT DROP
+    fi
+
+Run the following command.
+
+    $ chmod +x /etc/rc.d/rc.firewall
