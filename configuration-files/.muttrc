@@ -10,6 +10,9 @@ set editor = vim
 set sort = reverse-date-received
 set move = no
 
+auto_view = text/html
+alternative_order = text/plain text/html
+
 source ~/.muttrc.hotmail
 folder-hook "imaps://imap-mail.outlook.com:993" 'source ~/.muttrc.hotmail'
 macro index <f3> '<change-folder>imaps://imap-mail.outlook.com:993<enter>'
