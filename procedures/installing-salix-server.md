@@ -28,8 +28,8 @@ Salix installation
 Pay attention to the following options.
 
 - Partitions editor: Exit
-- Select Linux installation partition: /dev/mapper/lukssda2
-- Select other Linux partitions: /dev/sda1 at /boot
+- Select Linux installation partition: /dev/mapper/luksvda2
+- Select other Linux partitions: /dev/vda1 at /boot
 - Select installation mode: Core
 - Install LILO: simple standard MBR
 - Network: laptop laptop DHCP
@@ -77,8 +77,8 @@ Set the following options.
 
     image = /boot/vmlinuz
       initrd = /boot/initrd.gz
-      root = /dev/mapper/cryptroot
-      label = linux
+      root = /dev/mapper/luksvda2
+      label = Salix
       read-only
 
 Run the following command then reboot.

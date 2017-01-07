@@ -4,7 +4,7 @@ Apply the following settings.
 
 - Date and time: Now as UTC
 - Secure Boot Control: Disabled
-- Launch CMS: Enabled
+- Launch CSM: Enabled
 - Boot option #1: [P0: SanDisk]
 
 Use the boot override feature and select the DVD.
