@@ -69,15 +69,6 @@ Run the following commands.
     $ mount -o bind /sys /mnt/sys
     $ chroot /mnt
 
-Edit the following file.
-
-    /usr/sbin/eliloconfig
-
-Hack the following variable assignations.
-
-    EFI_DEVICE="/dev/mmcblk0"
-    EFI_PARTITION=1
-
 Run the following command to get the modules loaded by the installer.  
 Join them with : for the -m option of the next command.
 
@@ -87,6 +78,15 @@ Run the following command.
 
     $ mkinitrd -c -k 4.4.19 -f ext4 -m mmc_core:mmc_block:...
         -r /dev/mapper/luksmmcblk0p2 -C /dev/mmcblk0p2 -L
+
+Edit the following file.
+
+    /usr/sbin/eliloconfig
+
+Hack the following variable assignations.
+
+    EFI_DEVICE="/dev/mmcblk0"
+    EFI_PARTITION=1
 
 Run the following command.
 
