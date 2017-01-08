@@ -85,18 +85,6 @@ Run the following command then reboot.
 
     $ lilo
 
-Configuring the keyboard
-------------------------
-Edit the following file.
-
-    /etc/inputrc
-
-Modify the following lines.
-
-    # Set various nice escape sequences:
-    "\e[1;5C": forward-word
-    "\e[1;5D": backward-word
-
 Enabling SSH
 ------------
 Edit the following file.

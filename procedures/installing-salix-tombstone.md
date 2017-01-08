@@ -103,3 +103,65 @@ Delete the last line.
     append="root=..."
 
 Reboot and pray.
+
+Enabling SSH
+------------
+Edit the following file.
+
+    /etc/ssh/sshd_config
+
+Set the following options.
+
+    PermitRootLogin no
+    PubkeyAuthentication yes
+    AuthorizedKeysFile .ssh/authorized_keys
+    PasswordAuthentication no
+    AllowUsers your-account
+
+Copy your public RSA key to this file.
+
+    /home/your-account/.ssh/authorized_keys
+
+Run the following commands.
+
+    $ chmod +x /etc/rc.d/rc.sshd
+    $ /etc/rc.d/rc.sshd start
+
+Configuring the firewall
+------------------------
+Create the following file.
+
+    /etc/rc.d/rc.firewall
+
+With the following content.
+
+    #!/bin/bash
+    if [ "$1" = "start" ]
+    then
+      echo "Applying firewall configuration"
+
+      iptables -F
+      iptables -X
+      iptables -Z
+
+      iptables -P INPUT DROP
+      iptables -P FORWARD DROP
+      iptables -P OUTPUT ACCEPT
+
+      iptables -A INPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+      iptables -A INPUT -p tcp --dport 22 -m state --state NEW -m recent --set
+      iptables -A INPUT -p tcp --dport 22 -m state --state NEW -m recent --update --seconds 300 --hitcount 10 -j DROP
+      iptables -A INPUT -p tcp --dport 22 -j ACCEPT
+
+      ip6tables -F
+      ip6tables -X
+      ip6tables -Z
+
+      ip6tables -P INPUT DROP
+      ip6tables -P FORWARD DROP
+      ip6tables -P OUTPUT DROP
+    fi
+
+Run the following command.
+
+    $ chmod +x /etc/rc.d/rc.firewall
