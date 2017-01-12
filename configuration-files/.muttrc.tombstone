@@ -9,5 +9,5 @@ set smtp_url = "smtp://*****@mathieu-desrochers.com:587/"
 set smtp_pass = ""
 
 set spoolfile = "+INBOX"
-set postponed = "+[Tombstone]/Drafts"
-set record = "+Sent"
+set postponed = "+drafts"
+set record = "+sent"

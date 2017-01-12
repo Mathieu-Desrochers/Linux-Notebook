@@ -187,7 +187,7 @@ Run the following commands.
         -keyout /etc/ssl/private/mail.key
         -out /etc/ssl/certs/mailcert.pem
 
-Setting up a mail server
+Setting up a SMTP server
 ------------------------
 Create a MX record pointing to your server.  
 This can be confirmed with the following command.
@@ -248,8 +248,8 @@ Run the following command.
 
     $ newaliases
 
-Serving mail remotely
----------------------
+Setting up an IMAP server
+-------------------------
 Run the following command.
 
     $ groupadd -g 202 dovecot
@@ -273,12 +273,13 @@ With the following content.
     }
 
     userdb {
-      driver = passwd
+      driver = passwd-file
+      args = username_format=%u /etc/dovecot/users
     }
 
     passdb {
-      driver = pam
-      args = dovecot
+      driver = passwd-file
+      args = scheme=CRYPT username_format=%u /etc/dovecot/users
     }
 
     ssl = required
@@ -296,6 +297,16 @@ With the following content.
       }
     }
 
+Run the following commands with the user mail.  
+Replace password with an actual value.
+
+    $ echo "$USER:{PLAIN}password:$UID:`id -g`::$HOME" > users
+
+Run the following commands.
+
+    $ mv users /etc/dovecot/
+    $ chown dovecot:dovecot /etc/dovecot/users
+
 Edit the following file.
 
     /etc/postfix/master.cf
@@ -308,10 +319,7 @@ Uncomment the following lines.
 Run the following commands.
 
     $ chmod +x /etc/rc.d/rc.postfix
-    $ chmod +x /etc/rc.d/rc.dovecot
-
     $ /etc/rc.d/rc.postfix start
-    $ /etc/rc.d/rc.dovecot start
 
-Configuring a mail client
--------------------------
+    $ chmod +x /etc/rc.d/rc.dovecot
+    $ /etc/rc.d/rc.dovecot start

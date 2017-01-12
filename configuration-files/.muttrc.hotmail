@@ -9,5 +9,5 @@ set smtp_url = "smtp://*****@hotmail.com@smtp.live.com:587/"
 set smtp_pass = ""
 
 set spoolfile = "+INBOX"
-set postponed = "+[Hotmail]/Drafts"
+set postponed = "+Drafts"
 set record = "Sent"
