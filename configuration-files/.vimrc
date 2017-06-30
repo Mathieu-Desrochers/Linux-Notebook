@@ -36,4 +36,5 @@ Plugin 'VundleVim/Vundle.vim'
 call vundle#end()
 filetype plugin on
 
+let g:ctrlp_custom_ignore = {'file' : '\v\.(o)$' }
 let g:buffergator_viewport_split_policy="B"
