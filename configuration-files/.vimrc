@@ -11,6 +11,8 @@ syntax enable
 set list
 set listchars=tab:··,trail:·
 
+let mapleader=" "
+
 set hlsearch
 nnoremap <CR> :noh<CR><CR>
 
@@ -20,4 +22,18 @@ set nobackup
 set noswapfile
 set noundofile
 
-execute pathogen#infect()
+set nocompatible
+filetype off
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+Plugin 'jeetsukumaran/vim-buffergator'
+Plugin 'kien/ctrlp.vim'
+Plugin 'mxw/vim-jsx'
+Plugin 'pangloss/vim-javascript'
+Plugin 'rking/ag.vim'
+Plugin 'vim-scripts/paredit.vim'
+Plugin 'VundleVim/Vundle.vim'
+call vundle#end()
+filetype plugin on
+
+let g:buffergator_viewport_split_policy="B"
