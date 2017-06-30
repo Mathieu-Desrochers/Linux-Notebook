@@ -11,8 +11,6 @@ syntax enable
 set list
 set listchars=tab:··,trail:·
 
-let mapleader=" "
-
 set hlsearch
 nnoremap <CR> :noh<CR><CR>
 
