@@ -1,0 +1,10 @@
+set from = "*****@fastmail.com"
+set realname = "Mathieu Desrochers"
+
+set imap_user = "*****@fastmail.com"
+set imap_pass = ""
+set folder = "imaps://imap.fastmail.com:993"
+
+set spoolfile = "+INBOX"
+set postponed = "+Drafts"
+set record = "+Sent"
