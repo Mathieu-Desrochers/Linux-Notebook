@@ -31,6 +31,7 @@ Plugin 'pangloss/vim-javascript'
 Plugin 'rking/ag.vim'
 Plugin 'vim-scripts/paredit.vim'
 Plugin 'VundleVim/Vundle.vim'
+Plugin 'rust-lang/rust.vim'
 call vundle#end()
 filetype plugin on
 
