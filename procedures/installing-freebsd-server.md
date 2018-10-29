@@ -5,53 +5,39 @@ Select the following options.
 - Boot Multi User
 - Install
 - Continue with default keymap
-- Optional system components: Defaults
+- Optional system components: lib32, ports
 - Partitioning: Shell
 
 Full Disk Encryption
 --------------------
-Create the MBR slice.
+Create the GTP boot partition.
 
-    # gpart create -s mbr vtbd0
-    # gpart bootcode -b /boot/mbr vtbd0
-    # gpart add -t freebsd vtbd0
-    # gpart set -a active -i 1 vtbd0
+    # gpart create -s GPT vtbd0
+    # gpart add -t freebsd-boot -s 512K vtbd0
+    # gpart bootcode -b /boot/pmbr -p /boot/gptboot -i 1 vtbd0
 
-Create the partitions.
+Create the FreeBSD boot partition.
 
-    # gpart create -s bsd vtbd0s1
-    # gpart bootcode -b /boot/boot vtbd0s1
+    # gpart add -t freebsd-ufs -s 1G vtbd0
+    # newfs -U /dev/vtbd0p2
 
-    # gpart add -t freebsd-swap -s 1G -a 1M /dev/vtbd0s1
-    # gpart add -t freebsd-ufs -s 1G -a 1M /dev/vtbd0s1
-    # gpart add -t freebsd-ufs -a 1M /dev/ada0s1
+Create the FreeBSD root partition.
 
-Create the boot file system.
+    # gpart add -t freebsd-ufs -s 23G vtbd0
+    # newfs -U /dev/vtbd0p3
 
-    # newfs -S 4096 /dev/vtbd0s1b
+Mount the FreeBSD root partition.
+This is where the installer will copy files.
 
-Create the GELI file system.
+    # mount /dev/vtbd0p3 /mnt
 
-    # geli init -e AES-XTS -l 128 -s 4096 -b /dev/vtbd0s1d
-    # geli attach /dev/vtbd0s1d
-    # newfs -S 4096 /dev/vtbd0s1d.eli
+Mount the FreeBSD boot partition.
+This is where the installer will copy the boot files.
 
-Fool the installer into installing where we want.
-
-    # mount /dev/vtbd0s1d.eli /mnt
     # mkdir /mnt/bootfs
-    # mount /dev/vtbd0s1b /mnt/bootfs
+    # mount /dev/vtbd0p2 /mnt/bootfs
     # mkdir /mnt/bootfs/boot
     # ln -s /mnt/bootfs/boot /mnt/boot
-
-Create the following file.
-
-    /tmp/bsdinstall_etc/fstab
-
-With the following content.
-
-    /dev/vtbd0s1a.eli  none  swap  sw,ealgo=AES-XTS,keylen=128,sectorsize=4096 0 0
-    /dev/vtbd0s1d.eli  /     ufs   rw 1 1
 
 Create the following file.
 
@@ -59,12 +45,15 @@ Create the following file.
 
 With the following content.
 
-    geom_eli_load="YES"
-    vfs.root.mountfrom="ufs:vtbd0s1d.eli"
+    vfs.root.mountfrom="ufs:vtbd0p3"
 
-Run the following commands.
+Create the following file.
 
-    exit
+    /tmp/bsdinstall_etc/fstab
+
+With the following content.
+
+    /dev/vtbd0p3 / ufs rw 1 1
 
 Network Configuration
 ---------------------
@@ -86,7 +75,6 @@ System Configuration
 Select the following options.
 
 - ntpd
-- dumpdev
 
 System Hardening
 ----------------
