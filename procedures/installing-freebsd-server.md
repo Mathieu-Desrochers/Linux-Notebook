@@ -21,23 +21,26 @@ Create the FreeBSD boot partition.
     # gpart add -t freebsd-ufs -s 1G vtbd0
     # newfs -U /dev/vtbd0p2
 
-Create the FreeBSD root partition.
+Create the FreeBSD encrypted root partition.
 
     # gpart add -t freebsd-ufs -s 23G vtbd0
-    # newfs -U /dev/vtbd0p3
+    # geli init -b -s 4096 /dev/vtbd0p3
+    # geli attach /dev/vtbd0p3
+    # dd if=/dev/random of=/dev/vtbd0p3.eli bs=1m
+    # newfs -U /dev/vtbd0p3.eli
 
-Mount the FreeBSD root partition.
+Mount the FreeBSD encrypted root partition.
 This is where the installer will copy files.
 
-    # mount /dev/vtbd0p3 /mnt
+    # mount /dev/vtbd0p3.eli /mnt
 
 Mount the FreeBSD boot partition.
 This is where the installer will copy the boot files.
 
-    # mkdir /mnt/bootfs
-    # mount /dev/vtbd0p2 /mnt/bootfs
-    # mkdir /mnt/bootfs/boot
-    # ln -s /mnt/bootfs/boot /mnt/boot
+    # mkdir /tmp/bootfs
+    # mount /dev/vtbd0p2 /tmp/bootfs
+    # mkdir /tmp/bootfs/boot
+    # ln -s /tmp/bootfs/boot /mnt/boot
 
 Create the following file.
 
@@ -45,7 +48,8 @@ Create the following file.
 
 With the following content.
 
-    vfs.root.mountfrom="ufs:vtbd0p3"
+    geom_eli_load="YES"
+    vfs.root.mountfrom="ufs:vtbd0p3.eli"
 
 Create the following file.
 
@@ -53,7 +57,7 @@ Create the following file.
 
 With the following content.
 
-    /dev/vtbd0p3 / ufs rw 1 1
+    /dev/vtbd0p3.eli / ufs rw 1 1
 
 Network Configuration
 ---------------------
@@ -72,16 +76,8 @@ Select the following options.
 
 System Configuration
 --------------------
-Select the following options.
-
-- ntpd
+Unselect all the services.
 
 System Hardening
 ----------------
 Select all the options.
-
-Add Users
----------
-Select the following options.
-
-- Groups: wheel
