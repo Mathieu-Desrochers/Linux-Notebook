@@ -8,33 +8,51 @@ Select the following options.
 - Optional system components: lib32, ports
 - Partitioning: Shell
 
-Full Disk Encryption
---------------------
+Partitioning
+------------
 Create the GTP boot partition.
 
     # gpart create -s GPT vtbd0
     # gpart add -t freebsd-boot -s 512K vtbd0
     # gpart bootcode -b /boot/pmbr -p /boot/gptboot -i 1 vtbd0
 
-Create the FreeBSD boot partition.
+Create the boot partition.
 
-    # gpart add -t freebsd-ufs -s 1G vtbd0
+    # gpart add -t freebsd-ufs -s 2G vtbd0
     # newfs -U /dev/vtbd0p2
 
-Create the FreeBSD encrypted root partition.
+Create the encrypted root partition.
 
-    # gpart add -t freebsd-ufs -s 23G vtbd0
+    # gpart add -t freebsd-ufs -s 2G vtbd0
     # geli init -b -s 4096 /dev/vtbd0p3
     # geli attach /dev/vtbd0p3
-    # dd if=/dev/random of=/dev/vtbd0p3.eli bs=1m
     # newfs -U /dev/vtbd0p3.eli
 
-Mount the FreeBSD encrypted root partition.
+Create the encrypted home partition.
+
+    # gpart add -t freebsd-ufs -s 2G vtbd0
+    # geli init -s 4096 /dev/vtbd0p4
+    # geli attach /dev/vtbd0p4
+    # newfs -U /dev/vtbd0p4.eli
+
+Create the encrypted var partition.
+
+    # gpart add -t freebsd-ufs -s 18G vtbd0
+    # geli init -s 4096 /dev/vtbd0p5
+    # geli attach /dev/vtbd0p5
+    # newfs -U /dev/vtbd0p5.eli
+
+Create the swap partition.
+
+    # gpart add -t freebsd-swap vtbd0
+
+Mount the encrypted root partition.
 This is where the installer will copy files.
 
     # mount /dev/vtbd0p3.eli /mnt
+    # mkdir /mnt/home
 
-Mount the FreeBSD boot partition.
+Mount the boot partition.
 This is where the installer will copy the boot files.
 
     # mkdir /tmp/bootfs
@@ -57,15 +75,14 @@ Create the following file.
 
 With the following content.
 
-    /dev/vtbd0p3.eli / ufs rw 1 1
+    /dev/vtbd0p3.eli /     ufs  rw 0 0
+    /dev/vtbd0p4.eli /home ufs  rw 1 1
+    /dev/vtbd0p5.eli /var  ufs  rw 1 1
+    /dev/vtbd0p6.eli none  swap sw 0 0
 
 Network Configuration
 ---------------------
-Select the following options.
-
-- IPV4: Yes
-- DHCP: Yes
-- IPV6: No
+Cancel.
 
 Date and Time
 -------------
@@ -81,3 +98,11 @@ Unselect all the services.
 System Hardening
 ----------------
 Select all the options.
+
+Live CD
+-------
+Detach the encrypted partitions.
+
+    # geli detach /dev/vtbd0p3.eli
+    # geli detach /dev/vtbd0p4.eli
+    # geli detach /dev/vtbd0p5.eli
