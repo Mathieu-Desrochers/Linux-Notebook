@@ -8,8 +8,8 @@ Select the following options.
 - Optional system components: lib32, ports
 - Partitioning: Shell
 
-Partitioning
-------------
+Encrypted partitions
+--------------------
 Create the GTP boot partition.
 
     # gpart create -s GPT vtbd0
@@ -42,23 +42,26 @@ Create the encrypted var partition.
     # geli attach /dev/vtbd0p5
     # newfs -U /dev/vtbd0p5.eli
 
-Create the swap partition.
+Create the encrypted swap partition.
 
     # gpart add -t freebsd-swap vtbd0
 
-Mount the encrypted root partition.
+Mount the encrypted partitions.  
 This is where the installer will copy files.
 
     # mount /dev/vtbd0p3.eli /mnt
     # mkdir /mnt/home
+    # mkdir /mnt/var
+    # mount /dev/vtbd0p4.eli /mnt/home
+    # mount /dev/vtbd0p5.eli /mnt/var
 
-Mount the boot partition.
+Mount the boot partition.  
 This is where the installer will copy the boot files.
 
-    # mkdir /tmp/bootfs
-    # mount /dev/vtbd0p2 /tmp/bootfs
-    # mkdir /tmp/bootfs/boot
-    # ln -s /tmp/bootfs/boot /mnt/boot
+    # mkdir /tmp/vtbd0p2
+    # mount /dev/vtbd0p2 /tmp/vtbd0p2
+    # mkdir /tmp/vtbd0p2/boot
+    # ln -s /tmp/vtbd0p2/boot /mnt/boot
 
 Create the following file.
 
@@ -75,10 +78,12 @@ Create the following file.
 
 With the following content.
 
-    /dev/vtbd0p3.eli /     ufs  rw 0 0
-    /dev/vtbd0p4.eli /home ufs  rw 1 1
-    /dev/vtbd0p5.eli /var  ufs  rw 1 1
-    /dev/vtbd0p6.eli none  swap sw 0 0
+    /dev/vtbd0p2     /mnt/vtbd0p2 ufs   rw           0 2
+    /dev/vtbd0p3.eli /            ufs   rw           0 1
+    /dev/vtbd0p4.eli /home        ufs   rw           0 2
+    /dev/vtbd0p5.eli /var         ufs   rw           0 2
+    /dev/vtbd0p6.eli none         swap  sw           0 0
+    tmpfs            /tmp         tmpfs rw,size=100m 0 0
 
 Network Configuration
 ---------------------
@@ -99,10 +104,55 @@ System Hardening
 ----------------
 Select all the options.
 
-Live CD
--------
-Detach the encrypted partitions.
+First boot
+----------
+Remove the CD, reboot and select Boot Single User.
+Run the following commands.
 
-    # geli detach /dev/vtbd0p3.eli
-    # geli detach /dev/vtbd0p4.eli
-    # geli detach /dev/vtbd0p5.eli
+    # mount -o rw /
+
+    # geli attach /dev/vtbd0p4
+    # geli attach /dev/vtbd0p5
+    # mount -a
+
+    # rm /boot
+    # mkdir -p /mnt/vtbd0p2
+    # mount /dev/vtbd0p2 /mnt/vtbd0p2
+    # ln -s /mnt/vtbd0p2/boot /boot
+
+Securely joining the network
+----------------------------
+Run the following commands.
+
+    # sysrc pf_enable=YES
+    # sysrc blacklistd_enable=YES
+
+Create the following file.
+
+    /etc/pf.conf
+
+With the following content.
+
+    set skip on lo0
+    scrub in
+
+    anchor "blacklistd/*" in
+
+    block in
+    pass out
+
+    pass in proto tcp from any to port 22
+
+Create the following file.
+
+    /etc/blacklistd.conf
+
+With the following content.
+
+    [local]
+    ssh * * * * 3 24h
+
+Run the following commands.
+
+    # service pf start
+    # service blacklistd start
