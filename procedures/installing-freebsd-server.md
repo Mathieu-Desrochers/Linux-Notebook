@@ -152,7 +152,39 @@ With the following content.
     [local]
     ssh * * * * 3 24h
 
+Edit the following file.
+
+    /etc/rc.conf
+
+Add the following line.
+
+    ifconfig_vtnet0="DHCP"
+
+Reboot the server.
+Select Boot Single User.
+
+Enabling remote access
+----------------------
 Run the following commands.
 
-    # service pf start
-    # service blacklistd start
+    # mount -o rw /
+
+Edit the following file.
+
+    /etc/ssh/sshd_config
+
+Set the following options.
+
+    PermitRootLogin no
+    PubkeyAuthentication yes
+    AuthorizedKeysFile .ssh/authorized_keys
+    PasswordAuthentication no
+    AllowUsers mathieu
+
+Edit the following file.
+
+    /etc/rc.conf
+
+Add the following line.
+
+    sshd_enable="YES"
