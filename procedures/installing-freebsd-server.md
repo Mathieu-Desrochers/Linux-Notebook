@@ -23,37 +23,19 @@ Create the boot partition.
 
 Create the encrypted root partition.
 
-    # gpart add -t freebsd-ufs -s 2G vtbd0
+    # gpart add -t freebsd-ufs -s 100G vtbd0
     # geli init -b -s 4096 /dev/vtbd0p3
     # geli attach /dev/vtbd0p3
     # newfs -U /dev/vtbd0p3.eli
 
-Create the encrypted home partition.
-
-    # gpart add -t freebsd-ufs -s 2G vtbd0
-    # geli init -s 4096 /dev/vtbd0p4
-    # geli attach /dev/vtbd0p4
-    # newfs -U /dev/vtbd0p4.eli
-
-Create the encrypted var partition.
-
-    # gpart add -t freebsd-ufs -s 18G vtbd0
-    # geli init -s 4096 /dev/vtbd0p5
-    # geli attach /dev/vtbd0p5
-    # newfs -U /dev/vtbd0p5.eli
-
 Create the encrypted swap partition.
 
-    # gpart add -t freebsd-swap vtbd0
+    # gpart add -t freebsd-swap -s 1G vtbd0
 
 Mount the encrypted partitions.  
 This is where the installer will copy files.
 
     # mount /dev/vtbd0p3.eli /mnt
-    # mkdir /mnt/home
-    # mkdir /mnt/var
-    # mount /dev/vtbd0p4.eli /mnt/home
-    # mount /dev/vtbd0p5.eli /mnt/var
 
 Mount the boot partition.  
 This is where the installer will copy the boot files.
@@ -80,10 +62,7 @@ With the following content.
 
     /dev/vtbd0p2     /mnt/vtbd0p2 ufs   rw           0 2
     /dev/vtbd0p3.eli /            ufs   rw           0 1
-    /dev/vtbd0p4.eli /home        ufs   rw           0 2
-    /dev/vtbd0p5.eli /var         ufs   rw           0 2
-    /dev/vtbd0p6.eli none         swap  sw           0 0
-    tmpfs            /tmp         tmpfs rw,size=100m 0 0
+    /dev/vtbd0p4.eli none         swap  sw           0 0
 
 Network Configuration
 ---------------------
@@ -106,14 +85,8 @@ Select all the options.
 
 First boot
 ----------
-Remove the CD, reboot and select Boot Single User.
+Remove the CD, reboot and select Boot Single User.  
 Run the following commands.
-
-    # mount -o rw /
-
-    # geli attach /dev/vtbd0p4
-    # geli attach /dev/vtbd0p5
-    # mount -a
 
     # rm /boot
     # mkdir -p /mnt/vtbd0p2
@@ -161,14 +134,9 @@ Add the following line.
     ifconfig_vtnet0="DHCP"
 
 Reboot the server.
-Select Boot Single User.
 
 Enabling remote access
 ----------------------
-Run the following commands.
-
-    # mount -o rw /
-
 Edit the following file.
 
     /etc/ssh/sshd_config
@@ -179,7 +147,8 @@ Set the following options.
     PubkeyAuthentication yes
     AuthorizedKeysFile .ssh/authorized_keys
     PasswordAuthentication no
-    AllowUsers mathieu
+    UseBlacklist yes
+    AllowUsers your-username
 
 Edit the following file.
 
