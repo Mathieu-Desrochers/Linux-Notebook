@@ -1,7 +1,2 @@
-xterm*selectToClipboard: true
-
-xterm*vt100*translations: #override \n\
-  Shift <Key> Delete: insert-selection(CLIPBOARD) \n
-
 xterm*faceName: Terminus
 xterm*faceSize: 13

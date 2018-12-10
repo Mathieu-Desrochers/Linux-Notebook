@@ -1,8 +1,3 @@
-~/scripts/shell-colors
-
-P_GREEN="\[$(tput setaf 2)\]"
-P_RESET="\[$(tput sgr0)\]"
-PS1="$P_GREEN\u@\h:\w\\$ $P_RESET"
-
-LYNX_CFG=~/.lynx
-export LYNX_CFG
+export CLICOLOR="YES"
+~/.shell-colors
+PS1="\[\033[32m\]\u@\h:\w\\$\[\033[0m\] "
