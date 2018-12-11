@@ -157,3 +157,27 @@ Edit the following file.
 Add the following line.
 
     sshd_enable="YES"
+
+Installing a graphical desktop
+------------------------------
+Run the following commands.
+
+    # pkg install drm-kmod
+    # sysrc kld_list+="/boot/modules/i915kms.ko"
+    # pw groupmod video -m your-user
+
+Run the following commands.
+
+    # pkg install xorg
+
+Run the following commands.  
+Pay attention to the output about xorg.conf.
+
+    # pkg install urwfonts
+    # pkg install terminus-font
+
+Run the following commands.
+
+    # pkg install i3
+    # pkg install i3status
+    # pkg install dmenu
