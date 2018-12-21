@@ -133,7 +133,7 @@ Add the following line.
 
     ifconfig_vtnet0="DHCP"
 
-Reboot the server.
+Reboot.
 
 Enabling remote access
 ----------------------
@@ -181,3 +181,17 @@ Run the following commands.
     # pkg install i3
     # pkg install i3status
     # pkg install dmenu
+
+Enabling wireless networking
+----------------------------
+Plug in your nifty EW-7811Un.  
+Edit the following file.
+
+    /boot/loadder.conf
+
+Add the following options.
+
+    if_urtwn_load="YES"
+    legal.realtek.license_ack=1
+
+Reboot.
