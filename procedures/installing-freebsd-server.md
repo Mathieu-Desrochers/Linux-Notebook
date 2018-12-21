@@ -226,3 +226,28 @@ With the following content.
 
     username
     password
+
+Edit the following file.
+
+    /etc/resolv.conf
+
+List only the DNS servers of your provider.
+
+    nameserver 103.86.99.100
+    nameserver 103.86.99.100
+
+Lock things up with the following command.
+
+    chflags schg /etc/resolv.conf
+
+Edit the following file.
+
+    /etc/pf.conf
+
+Set the following outbound rules.  
+Use the DNS servers and IP address of your provider.
+
+    block out all
+    pass out on wlan0 proto {tcp udp} from any to {103.86.99.100 103.86.99.100} port 53
+    pass out on wlan0 proto {tcp udp} from any to 67.215.14.197
+    pass out on tun0 all
