@@ -187,7 +187,7 @@ Enabling wireless networking
 Plug in your nifty EW-7811Un.  
 Edit the following file.
 
-    /boot/loadder.conf
+    /boot/loader.conf
 
 Add the following options.
 
