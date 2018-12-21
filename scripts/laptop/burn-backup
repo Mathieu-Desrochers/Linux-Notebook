@@ -1,2 +1,0 @@
-#!/bin/bash
-growisofs -Z /dev/cdrom -R -J ~/backup.tar.gz

@@ -1,8 +1,0 @@
-#!/bin/bash
-cd /usr/src/linux
-make menuconfig
-make -j5 && make install_modules
-mount /dev/sda2
-make install
-grub-mkconfig -o /boot/grub/grub.cfg
-shutdown -r now
