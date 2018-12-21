@@ -195,3 +195,34 @@ Add the following options.
     legal.realtek.license_ack=1
 
 Reboot.
+
+Forcing traffic through a VPN
+-----------------------------
+Edit the following file.
+
+    /boot/loader.conf
+
+Add the following options.
+
+    if_tun="YES"
+
+Download the .ovpn file of your choice from your provider.  
+Copy it in the following location.
+
+    /usr/local/etc/openvpn.conf
+
+Apply the following change to the file.
+
+    ---- auth-user-pass
+    ++++ auth-user-pass /home/your-name/.vpn
+
+    ++++ daemon
+
+Create the following file.
+
+    /home/your-name/.vpn
+
+With the following content.
+
+    username
+    password

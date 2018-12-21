@@ -2,3 +2,4 @@
 ifconfig wlan0 create wlandev rtwn0
 wpa_supplicant -Dbsd -i wlan0 -c /usr/local/etc/wpa_supplicant.conf -B
 dhclient wlan0
+openvpn /usr/local/etc/openvpn.conf
