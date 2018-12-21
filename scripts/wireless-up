@@ -1,4 +1,4 @@
 #!/bin/sh
 ifconfig wlan0 create wlandev rtwn0
-wpa_supplicant -Dbsd -i wlan0 -c /etc/wpa_supplicant.conf -B
+wpa_supplicant -Dbsd -i wlan0 -c /usr/local/etc/wpa_supplicant.conf -B
 dhclient wlan0
