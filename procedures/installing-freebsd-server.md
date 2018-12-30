@@ -45,6 +45,10 @@ This is where the installer will copy the boot files.
     # mkdir /tmp/vtbd0p2/boot
     # ln -s /tmp/vtbd0p2/boot /mnt/boot
 
+Create the final mount point.
+
+    # mkdir -p /mnt/mnt/vtbd0p2
+
 Create the following file.
 
     /tmp/bsdinstall_boot/loader.conf
@@ -86,10 +90,9 @@ Select all the options.
 First boot
 ----------
 Remove the CD, reboot and select Boot Single User.  
-Run the following commands.
+Fix the boot link.
 
     # rm /boot
-    # mkdir -p /mnt/vtbd0p2
     # mount /dev/vtbd0p2 /mnt/vtbd0p2
     # ln -s /mnt/vtbd0p2/boot /boot
 
@@ -147,6 +150,7 @@ Set the following options.
     PubkeyAuthentication yes
     AuthorizedKeysFile .ssh/authorized_keys
     PasswordAuthentication no
+    ChallengeResponseAuthentication no
     UseBlacklist yes
     AllowUsers your-username
 
