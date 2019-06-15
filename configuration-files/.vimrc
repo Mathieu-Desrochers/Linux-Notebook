@@ -37,3 +37,5 @@ filetype plugin on
 
 let g:ctrlp_custom_ignore = {'file' : '\v\.(o)$' }
 let g:buffergator_viewport_split_policy="B"
+
+au BufRead,BufNewFile *.svelte set filetype=html
