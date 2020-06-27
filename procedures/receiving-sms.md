@@ -1,6 +1,6 @@
 Getting a virtual phone number
 ------------------------------
-Open an account with Vonage.
+Open an account with Vonage.  
 This service has to be paid for.
 
     https://www.vonage.com/communications-apis
