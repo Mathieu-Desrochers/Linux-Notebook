@@ -5,7 +5,7 @@ This service has to be paid for.
 
     https://www.vonage.com/communications-apis
 
-Buy a number and configure its SMS Inbound Webhook URL:
+Buy a number and configure its SMS Inbound Webhook URL.
 
     http://your-domain:3000/webhooks/receive-sms-{random-string}
 
@@ -13,7 +13,7 @@ Hosting the webhook
 -------------------
 Create the following file.
 
-    ~/receive-sms.py
+    receive-sms.py
 
 With the following content.
 
