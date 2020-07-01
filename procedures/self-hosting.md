@@ -254,6 +254,8 @@ Edit the following file.
 
 Replace its content with the following lines.
 
+    compatibility_level = 2
+
     myhostname = your-domain.com
     mydomain = your-domain.com
     myorigin = $mydomain
