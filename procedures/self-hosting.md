@@ -273,19 +273,13 @@ Replace its content with the following lines.
 
     home_mailbox = Maildir/
 
-Run the following commands.
-
-    $ sudo deluser -remove-home mail
-    $ sudo adduser mail
-
 Edit the following file.
 
     /etc/aliases
 
 Define the following aliases.
 
-    postmaster: mail
-    root: mail
+    mail: your-user
 
 Run the following commands.
 
@@ -384,8 +378,8 @@ Inbound:
     - Protocol: IMAP
     - Server: your-domain.com
     - Port: 993
-    - Username: mail
-    - Password: mail's linux password
+    - Username: your-user
+    - Password: your-user's linux password
     - Encryption: TLS
     - Authentication: Clear text
 
@@ -394,8 +388,8 @@ Outbound:
     - Protocol: SMTP
     - Server: your-domain.com
     - Port: 587
-    - Username: mail
-    - Password: mail's linux password
+    - Username: your-user
+    - Password: your-user's linux password
     - Encryption: TLS
     - Authentication: Plain
 
