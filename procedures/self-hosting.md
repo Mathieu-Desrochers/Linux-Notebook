@@ -393,6 +393,97 @@ Outbound:
     - Encryption: TLS
     - Authentication: Plain
 
+Setting up a CalDav server
+--------------------------
+Run the following command.
+
+    $ sudo python -m pip install radicale
+
+Run the following commands.
+
+    $ sudo mkdir -p /home/your-user/radicale/collections
+    $ sudo mkdir -p /usr/local/etc/radicale
+
+    $ sudo pw useradd -n radicale -s /usr/sbin/nologin -h - -d /nonexistent
+    $ sudo pw group mod radicale -m your-user
+
+    $ sudo chown -R radicale:radicale /home/your-user/radicale
+
+Run the following commands.
+
+    $ sudo openssl req -x509 -nodes -days 3650 -newkey rsa:2048
+        -keyout /etc/ssl/radicale.key
+        -out /etc/ssl/radicale.pem
+
+    $ sudo chown radicale:radicale /etc/ssl/radicale.key
+    $ sudo chown radicale:radicale /etc/ssl/radicale.pem
+
+Run the following commands.
+
+    $ openssl passwd -apr1
+
+Create the following file.
+
+    /usr/local/etc/radicale/config
+
+With the following content.
+
+    your-user:output-from-previous-command
+
+Create the following file.
+
+    /usr/local/etc/radicale/config
+
+With the following content.
+
+    [server]
+    hosts = 0.0.0.0:5232
+    ssl = True
+    certificate = /etc/ssl/radicale.pem
+    key = /etc/ssl/radicale.key
+    max_connections = 20
+    max_content_length = 100000000
+    timeout = 30
+
+    [auth]
+    type = htpasswd
+    htpasswd_filename = /usr/local/etc/radicale/users
+    htpasswd_encryption = md5
+    delay = 30
+
+    [storage]
+    filesystem_folder = /home/your-user/radicale/collections
+
+Create the following file.
+
+    /etc/rc.d/radicale
+
+With the following content.
+
+    #!/bin/sh
+
+    # PROVIDE: radicale
+    # REQUIRE: DAEMON
+    # BEFORE: LOGIN
+
+    . /etc/rc.subr
+
+    name=radicale
+    rcvar=radicale_enable
+
+    command=/usr/sbin/daemon
+    command_args="-r -u radicale /usr/local/bin/python -m radicale -C /usr/local/etc/radicale/config"
+
+    load_rc_config $name
+    run_rc_command "$1"
+
+Browse to the following address.
+
+    https://your-domain.com:5232
+
+Login and create a calender.
+Then copy its URL in Thunderbird.
+
 Setting up a git repository
 ---------------------------
 Run the following command on the server.
