@@ -481,7 +481,7 @@ Browse to the following address.
 
     https://your-domain.com:5232
 
-Login and create a calender.
+Login and create a calender.  
 Then copy its URL in Thunderbird.
 
 Setting up a git repository
