@@ -1,1 +1,3 @@
-xterm*font: -*-terminus-medium-*-*-*-*-180-*-*-*-*-iso10646-1
+UXTerm*renderFont: true
+UXTerm*faceName: xos4 Terminus
+UXTerm*faceSize: 14
