@@ -79,8 +79,8 @@ Run the following command.
 Select the default options for adduser.conf.  
 Then specify the following options.
 
-    - name: your-user
-    - password: hunter2
+  - name: your-user
+  - password: hunter2
 
 Create the following file.
 
