@@ -47,19 +47,15 @@ OpenBSD Installation
 Select the following options.
 
   - (I)nstall
-
   - network interface: vio0
   - ipv4 address: dhcp
   - ipv6 address: none
-
   - start sshd: no
   - x window system: no
   - setup user: no
-
   - root disk: sd1
   - whole disk mbr
   - auto layout
-
   - sets: -game\* -x\*
 
 First Boot
