@@ -47,3 +47,54 @@ OpenBSD Installation
 Select the following options.
 
   - (I)nstall
+
+  - network interface: vio0
+  - ipv4 address: dhcp
+  - ipv6 address: none
+
+  - start sshd: no
+  - x window system: no
+  - setup user: no
+
+  - root disk: sd1
+  - whole disk mbr
+  - auto layout
+
+  - sets: -game\* -x\*
+
+First Boot
+----------
+Time spent reading the following is well invested.
+
+    # man afterboot
+
+System Update
+-------------
+Run the following command.
+
+    # syspatch
+
+User Creation
+-------------
+Run the following command.
+
+    # adduser
+
+Select the default options for adduser.conf.  
+Then specify the following options.
+
+    - name: your-user
+    - password: hunter2
+
+Create the following file.
+
+    /etc/doas.conf
+
+With the following content.
+
+    permit persist :wheel
+
+Run the following command.  
+Then never login as root again.
+
+    # usermod -G wheel your-user
