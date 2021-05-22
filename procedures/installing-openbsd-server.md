@@ -52,22 +52,22 @@ Run the following command.
 
     # syspatch
 
-Create the file /etc/doas.conf.
+Create the file /etc/doas.conf
 
     permit persist :wheel
 
-Security
---------
+Securing SSH
+------------
 Upload your public ssh key using scp  
 and the password for your-user.
 
     scp key your-user@deep-thought-ip:.ssh/authorized_keys
 
-Update the file /etc/ssh/sshd\_config.
+Update the file /etc/ssh/sshd\_config
 
     AuthenticationMethods publickey
 
-Update the file /etc/pf.conf.
+Update the file /etc/pf.conf
 
     set skip on lo
     antispoof for vio0 inet
@@ -79,3 +79,11 @@ Update the file /etc/pf.conf.
     pass out on egress proto { tcp udp icmp } from vio0
 
 Reboot feeling a little safer.
+
+Cherry Picking Services
+-----------------------
+Create the file /etc/rc.conf.local
+
+    ntpd_flags=NO
+    slaacd_flags=NO
+    sndiod_flags=NO
