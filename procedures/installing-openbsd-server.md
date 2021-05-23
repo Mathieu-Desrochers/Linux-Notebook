@@ -13,7 +13,7 @@ Run the following commands.
 
     sd0> a a
     offset: [64]
-    size: [] *
+    size: []
     FS type: [4.2BSD] RAID
     sd0*> w
     sd0> q
@@ -42,7 +42,12 @@ Select the following options.
 
     root disk: sd1
     whole disk mrb
-    auto layout
+    auto layout or edit auto layout
+
+    sd0> R h
+    new size (with unit) 8G
+    sd0*> w
+    sd0> q
 
 Time spent reading the following is well invested.
 
@@ -61,7 +66,7 @@ Securing SSH
 Upload your public ssh key using scp  
 and the password for your-user.
 
-    scp key your-user@deep-thought-ip:.ssh/authorized_keys
+    scp key your-user@192.168.100.100:.ssh/authorized_keys
 
 Update the file /etc/ssh/sshd\_config
 
@@ -75,8 +80,8 @@ Update the file /etc/pf.conf
     block all
     block in quick from urpf-failed
 
-    pass in log on egress proto tcp to vio0 port ssh
-    pass out on egress proto { tcp udp icmp } from vio0
+    pass in log on vio0 proto tcp to 192.168.100.100 port ssh
+    pass out on vio0 proto { tcp udp icmp } from 192.168.100.100
 
 Reboot feeling a little safer.
 
