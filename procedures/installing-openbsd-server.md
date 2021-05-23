@@ -86,4 +86,12 @@ Create the file /etc/rc.conf.local
 
     ntpd_flags=NO
     slaacd_flags=NO
+    smtpd_flags=NO
     sndiod_flags=NO
+
+Bells and Whistles
+------------------
+Edit the file ~/.profile
+
+    PS1="\[\033[32m\]\u@\h:\w\\$\[\033[0m\] "
+    export PS1
