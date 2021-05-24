@@ -98,5 +98,5 @@ Bells and Whistles
 ------------------
 Edit the file ~/.profile
 
-    PS1="\[\033[32m\]\u@\h:\w\\$\[\033[0m\] "
+    PS1="\[\033[31m\]\u@\h:\w\\$\[\033[0m\] "
     export PS1
