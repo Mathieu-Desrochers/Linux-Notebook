@@ -49,10 +49,6 @@ Select the following options.
     sd0*> w
     sd0> q
 
-Run the following command.
-
-    # syspatch
-
 Create the file /etc/doas.conf
 
     permit persist :wheel
