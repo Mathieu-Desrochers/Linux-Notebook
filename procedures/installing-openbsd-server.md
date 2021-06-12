@@ -49,10 +49,6 @@ Select the following options.
     sd0*> w
     sd0> q
 
-Time spent reading the following is well invested.
-
-    # man afterboot
-
 Run the following command.
 
     # syspatch
@@ -68,11 +64,11 @@ and the password for your-user.
 
     scp key your-user@192.168.100.100:.ssh/authorized_keys
 
-Update the file /etc/ssh/sshd\_config
+Update the file /etc/ssh/sshd\_config.
 
     AuthenticationMethods publickey
 
-Update the file /etc/pf.conf
+Update the file /etc/pf.conf.
 
     set skip on lo
     antispoof for vio0 inet
@@ -80,8 +76,8 @@ Update the file /etc/pf.conf
     block all
     block in quick from urpf-failed
 
-    pass in log on vio0 proto tcp to 192.168.100.100 port ssh
-    pass out on vio0 proto { tcp udp icmp } from 192.168.100.100
+    pass in log on vio0 proto tcp to server-ip port 22
+    pass out on vio0 proto { tcp udp icmp } from server-ip
 
 Reboot feeling a little safer.
 
@@ -96,7 +92,7 @@ Create the file /etc/rc.conf.local
 
 Bells and Whistles
 ------------------
-Edit the file ~/.profile
+Update the file ~/.profile.
 
     PS1="\[\033[31m\]\u@\h:\w\\$\[\033[0m\] "
     export PS1
