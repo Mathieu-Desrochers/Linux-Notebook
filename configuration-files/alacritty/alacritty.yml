@@ -1,0 +1,21 @@
+font:
+  normal:
+    family: Cousine Nerd Font Mono
+    style: Regular
+
+  bold:
+    family: Cousine Nerd Font Mono
+    style: Bold
+
+  italic:
+    family: Cousine Nerd Font Mono
+    style: Italic
+
+  bold_italic:
+    family: Cousine Nerd Font Mono
+    style: Bold Italic
+
+  size: 15.0
+
+window:
+  startup_mode: Maximized
