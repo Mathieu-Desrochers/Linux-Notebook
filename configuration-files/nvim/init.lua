@@ -1,104 +1,93 @@
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
-
-vim.g.mapleader = ","
+vim.g.mapleader = " "
 
 vim.opt.termguicolors = true
+vim.opt.tabstop = 2
+vim.opt.softtabstop = 2
+vim.opt.shiftwidth = 2
+vim.opt.expandtab = true
+vim.opt.number = true
+vim.opt.encoding = "utf-8"
+vim.opt.fileencoding = "utf-8"
 
-local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+local vim = vim
+local Plug = vim.fn["plug#"]
 
-if not (vim.uv or vim.loop).fs_stat(lazypath) then
-  local lazyrepo = "https://github.com/folke/lazy.nvim.git"
-  local out = vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
-  if vim.v.shell_error ~= 0 then
-    vim.api.nvim_echo({
-      { "Failed to clone lazy.nvim:\n", "ErrorMsg" },
-      { out, "WarningMsg" },
-      { "\nPress any key to exit..." },
-    }, true, {})
-    vim.fn.getchar()
-    os.exit(1)
-  end
-end
+vim.call("plug#begin")
 
-vim.opt.rtp:prepend(lazypath)
+Plug("folke/tokyonight.nvim")
+Plug("nvim-tree/nvim-web-devicons")
+Plug("romgrk/barbar.nvim")
+Plug("nvim-tree/nvim-tree.lua")
+Plug("nvim-lua/plenary.nvim")
+Plug("nvim-telescope/telescope.nvim", { ["tag"] = "0.1.8" })
+Plug("nvim-lualine/lualine.nvim")
+Plug("sindrets/diffview.nvim")
+Plug("stevearc/conform.nvim")
+Plug("neovim/nvim-lspconfig")
+Plug("hrsh7th/cmp-nvim-lsp")
+Plug("hrsh7th/cmp-buffer")
+Plug("hrsh7th/cmp-path")
+Plug("hrsh7th/cmp-cmdline")
+Plug("hrsh7th/nvim-cmp")
+Plug("hrsh7th/cmp-vsnip")
+Plug("hrsh7th/vim-vsnip")
+Plug("mfussenegger/nvim-dap")
+Plug("leoluz/nvim-dap-go")
 
-local set = vim.opt
-set.tabstop = 2
-set.softtabstop = 2
-set.shiftwidth = 2
-set.expandtab = true
-set.number = true
-set.encoding = "utf-8"
-set.fileencoding = "utf-8"
+vim.call("plug#end")
 
-require("lazy").setup({
-  spec = {
-    {
-      "catppuccin/nvim",
-      priority = 1000,
-      config = function()
-        require("catppuccin").setup({
-          flavour = "macchiato"
-        })
-        require("catppuccin").load()
-      end
-    },
-    {
-      "nvim-tree/nvim-tree.lua",
-      lazy = false,
-      dependencies = {
-        "nvim-tree/nvim-web-devicons"
-      },
-      config = function()
-        require("nvim-tree").setup({
-          view = {
-            width = 40
-          },
-      })
-      end
-    },
-    {
-      "nvim-tree/nvim-web-devicons"
-    },
-    {
-      "romgrk/barbar.nvim",
-      init = function()
-        vim.g.barbar_auto_setup = false
-      end,
-      opts = {},
-    },
-    {
-      "nvim-lua/plenary.nvim"
-    },
-    {
-      "nvim-telescope/telescope.nvim",
-      dependencies =
-      {
-        "nvim-lua/plenary.nvim"
-      }
-    },
-    {
-      "nvim-treesitter/nvim-treesitter",
-      branch = "master",
-      lazy = false,
-      build = ":TSUpdate"
-    }
+vim.cmd("silent! colorscheme tokyonight")
+
+require("nvim-tree").setup({
+  view = {
+    width = 50,
   },
 })
 
-local map = vim.api.nvim_set_keymap
-local opts = { noremap = true, silent = true }
+require("lualine").setup()
+
+require("conform").setup({
+  formatters_by_ft = {
+    go = { "gofmt" },
+  },
+})
+
+vim.lsp.enable("gopls")
+
+local cmp = require("cmp")
+cmp.setup({
+  snippet = {
+    expand = function(args)
+      vim.fn["vsnip#anonymous"](args.body)
+    end,
+  },
+  window = {
+    completion = cmp.config.window.bordered(),
+    documentation = cmp.config.window.bordered(),
+  },
+  mapping = cmp.mapping.preset.insert({
+    ["<Tab>"] = cmp.mapping.confirm({ select = true }),
+  }),
+  sources = cmp.config.sources({
+      { name = "nvim_lsp" },
+      { name = "vsnip" },
+    }, {
+      { name = "buffer" },
+    })
+})
+
+require("dap-go").setup()
+
+local map = vim.keymap.set
 
 map("n", "<Tab>", "<Cmd>BufferNext<CR>", opts)
 map("n", "<S-Tab>", "<Cmd>BufferPrevious<CR>", opts)
-map("n", "<Leader>e", "<Cmd>NvimTreeToggle<CR>", opts)
-
-local builtin = require("telescope.builtin")
-
-vim.keymap.set("n", "<leader>ff", builtin.find_files)
-vim.keymap.set("n", "<leader>fg", builtin.live_grep)
-vim.keymap.set("n", "<leader>fb", builtin.buffers)
-vim.keymap.set("n", "<leader>fh", builtin.help_tags)
-
-vim.cmd("NvimTreeToggle")
+map("n", "<Leader>p", "<Cmd>BufferPin<CR>", opts)
+map("n", "<Leader>x", "<Cmd>bd<CR>", opts)
+map("n", "<Leader>ff", "<Cmd>Telescope find_files<CR>")
+map("n", "<Leader>fg", "<Cmd>Telescope live_grep<CR>")
+map("n", "<Leader>e", "<Cmd>NvimTreeToggle<CR>")
+map("n", "<Leader>e", "<Cmd>NvimTreeToggle<CR>")
+map("n", "<Leader>d", "<Cmd>DiffviewOpen<CR>")
